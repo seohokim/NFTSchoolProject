@@ -17,6 +17,8 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
     Counters.Counter public currentTokenID;
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER");
+
+    // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
     uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
 
     mapping(address => TokenMetadata) private metadata;
@@ -60,6 +62,8 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
         require(metaData.ids[data.unique_id] != true, "That's unique_id already exists");
         metaData.ids[data.unique_id] = true;
         metaData.stored.push(data);
+
+        _mint(user, data.unique_id);                // Afterwards, should change to Counter (auto increments)
         return true;
     }
 
@@ -80,6 +84,7 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
             metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
             metaData.stored.pop();
         }
+        _burn(unique_id);
         return true;
     }
 
