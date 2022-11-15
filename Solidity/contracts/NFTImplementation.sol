@@ -5,18 +5,18 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
 import "./interfaces/INFTImplementation.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
-contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT", "ONFT") {
+import "./utils/OwnableCustom.sol";
+
+contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT", "ONFT") {
     using Counters for Counters.Counter;
 
     // Class member variables section
     Counters.Counter public currentTokenID;
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER");
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER");
 
     // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
     uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
@@ -25,25 +25,11 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
     mapping(address => TokenMetadata) private metadata;
     PendingMetadata[] pendingQueue;
 
-    // Modifiers and Events
-    modifier onlyAdmin(address sender) {
-        require(hasRole(DEFAULT_ADMIN_ROLE, sender), "YOU ARE NOT ADMIN");
-        _;
-    }
-
-    modifier onlyMinter(address sender) {
-        require(hasRole(MINTER_ROLE, sender), "YOU ARE NOT MINTER");
-        _;
-    }
-
-    modifier onlyBurner(address sender) {
-        require(hasRole(BURNER_ROLE, sender), "YOU ARE NOT BURNER");
-        _;
-    }
-
     constructor(address minter) {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, minter);
+        address _minter = minter;
+        address _burner = msg.sender;
+
+        initializePermission(_minter, _burner);
     }
 
     // Implementation for Users
