@@ -7,6 +7,7 @@ contract OwnableCustom is AccessControl {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER");
 
+    // Modifers area
     modifier onlyAdmin(address sender) {
         require(hasRole(DEFAULT_ADMIN_ROLE, sender), "YOU ARE NOT ADMIN");
         _;
@@ -26,5 +27,20 @@ contract OwnableCustom is AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, minter);
         _setupRole(BURNER_ROLE, burner);
+    }
+
+    // Functions area
+
+    function changeOwner(address user) external onlyAdmin(msg.sender) {
+        renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        grantRole(DEFAULT_ADMIN_ROLE, user);
+    }
+
+    function addMinter(address minter) external onlyAdmin(msg.sender) {
+        grantRole(MINTER_ROLE, minter);
+    }
+
+    function removeMinter(address minter) external onlyAdmin(msg.sender) {
+        renounceRole(MINTER_ROLE, minter);
     }
 }
