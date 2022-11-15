@@ -9,6 +9,12 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER");
 
+    address private owner;
+
+    function getOwner() external view returns (address) {
+        return owner;
+    }
+
     // Modifers area
     modifier onlyAdmin(address sender) {
         require(hasRole(DEFAULT_ADMIN_ROLE, sender), "YOU ARE NOT ADMIN");
@@ -25,10 +31,18 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
         _;
     }
 
+    modifier adminOrContract(address contr) {
+        require(msg.sender == address(contr) ||
+                msg.sender == owner, "Admin or Pending Queue only can call this");
+        _;
+    }
+
     function initializePermission(address minter, address burner) public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, minter);
         _setupRole(BURNER_ROLE, burner);
+
+        owner = address(msg.sender);
 
         emit InitializePermission(minter, burner);
     }
@@ -39,6 +53,7 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
         renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
         grantRole(DEFAULT_ADMIN_ROLE, user);
 
+        owner = address(user);
         emit ChangeOwner(user);
     }
 
@@ -53,4 +68,6 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
 
         emit RemoveMinter(minter);
     }
+
+    // Getter & Setter
 }

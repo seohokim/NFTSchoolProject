@@ -18,6 +18,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     using Counters for Counters.Counter;
 
     // Class member variables section
+    address private owner;
     Counters.Counter public currentTokenID;
     // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
     uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
@@ -31,6 +32,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         address _minter = minter;
         address _burner = msg.sender;
 
+        owner = address(msg.sender);
+
         initializePermission(_minter, _burner);
 
         // Initialize Pending Queue
@@ -39,7 +42,6 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     }
 
     // Implementation for Users
-    // TODO
     // 1. Basic Minting, Burning implementation
     // 2. Basic Transferring implementation
     // 3. Auction implementation
@@ -63,6 +65,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         return true;
     }
 
+    /*
     function burn(address user, uint256 unique_id) external returns(bool) {
         require(msg.sender == user, "You can't burn this token");
         DataTypes.TokenMetadata storage metaData = metadata[user];
@@ -85,8 +88,15 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         emit Burn(user, unique_id);
         return true;
     }
+    */
 
-    function burn_pending(uint256 token_id) external returns (bool) {
+    function burningByAdmin(uint256 tokenId) external 
+        adminOrContract(address(pendingQueueContract)) returns (bool) {
+        _burn(tokenId);
+        return true;
+    }
+
+    function requestBurning(uint256 token_id) external returns (bool) {
         DataTypes.TokenMetadata storage metaData = metadata[msg.sender];
         uint256 tokenIndex = _findTokenID(metaData, token_id);
 
@@ -117,7 +127,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     }
 
     // Transfer ownership of each NFT items
-    function transfer_ownership(address user, uint256 token_id) external returns (bool) {
+    function transferOwnership(address user, uint256 token_id) external returns (bool) {
         DataTypes.TokenMetadata storage metaData = metadata[user];
         uint256 tokenIndex = _findTokenID(metaData, token_id);
 
@@ -130,9 +140,6 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         safeTransferFrom(address(msg.sender), user, token_id);
         return true;
     }
-    
-
-    // 
 
     // private functions
     function _findTokenID(DataTypes.TokenMetadata storage _metadata, uint256 unique_id) private view returns (uint256) {
@@ -152,7 +159,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     }
 
     // Restore pending element
-    function restoreMetadata(address user, uint256 tokenId) public onlyAdmin(msg.sender) returns (bool) {
+    function restoreMetadata(address user, uint256 tokenId) external onlyAdmin(msg.sender) returns (bool) {
         uint256 index = pendingQueueContract.findPendingMetadata(tokenId);
         
         if (index == type(uint256).max) {
@@ -175,5 +182,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         return super.supportsInterface(interfaceId);
     }
 
-    // Getter & Setter
+    // Delete contract logics
+    function terminate() payable external {
+        selfdestruct(payable(owner));
+    }
 }
