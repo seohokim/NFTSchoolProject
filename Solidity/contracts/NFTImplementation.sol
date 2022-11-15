@@ -20,6 +20,7 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
 
     // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
     uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
+    uint256 public deadline = 7 days;
 
     mapping(address => TokenMetadata) private metadata;
     PendingMetadata[] pendingQueue;
@@ -89,6 +90,34 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
         return true;
     }
 
+    function burn_pending(uint256 token_id) external returns (bool) {
+        TokenMetadata storage metaData = metadata[msg.sender];
+        uint256 tokenIndex = _findTokenID(metaData, token_id);
+
+        require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID issue");
+        require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
+
+        // Need to check this is already in pending queue
+        if (_isPending(token_id)) {
+            return false;
+        }
+        
+        // Remove from user's Metadata, and insert into Pending Queue
+        pendingQueue.push(PendingMetadata(
+            token_id,
+            msg.sender,
+            metaData.stored[tokenIndex],
+            block.timestamp
+        ));
+
+        // Delete information from original list
+        metaData.ids[token_id] = false;
+        metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
+        metaData.stored.pop();
+
+        return true;
+    }
+
     // Transfer ownership of each NFT items
     function transfer_ownership(address user, uint256 token_id) external returns (bool) {
         TokenMetadata storage metaData = metadata[user];
@@ -103,6 +132,7 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
         safeTransferFrom(address(msg.sender), user, token_id);
         return true;
     }
+    
 
     // 
 
@@ -124,35 +154,58 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
         return false;
     }
 
+    function _findPendingMetadata(uint256 tokenId) private view returns (uint256) {
+        for (uint256 i = 0; i < pendingQueue.length; i++) {
+            if (pendingQueue[i].id == tokenId) {
+                return i;
+            }
+        }
+        return type(uint256).max;
+    }
+
     // Admin Functions
 
-    // Burning request queue
-    function burn_pending(uint256 token_id) external returns (bool) {
-        TokenMetadata storage metaData = metadata[msg.sender];
-        uint256 tokenIndex = _findTokenID(metaData, token_id);
+    // Accepting request onlyOwner
+    function acceptRequest() external onlyAdmin(msg.sender) returns (uint256) {
+        uint256 accepted = 0;
+        uint256 currentTime = block.timestamp;
 
-        require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID issue");
-        require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
+        for (uint256 i = pendingQueue.length - 1; i >= 0; i--) {
+            PendingMetadata storage pending = pendingQueue[i];
 
-        // Need to check this is already in pending queue
-        if (_isPending(token_id)) {
+            if (currentTime >= pending.requestedTime + deadline) {
+                pendingQueue[i] = pendingQueue[pendingQueue.length - 1];
+
+                pendingQueue.pop();
+                accepted += 1;
+            }
+        }
+        return accepted;
+    }
+
+    // Restore pending element
+    function restoreMetadata(address user, uint256 tokenId) public onlyAdmin(msg.sender) returns (bool) {
+        uint256 index = _findPendingMetadata(tokenId);
+        
+        if (index == type(uint256).max) {
             return false;
         }
-        
-        // Remove from user's Metadata, and insert into Pending Queue
-        pendingQueue.push(PendingMetadata(
-            token_id,
-            msg.sender,
-            metaData.stored[tokenIndex]
+
+        // Restore data
+        TokenMetadata storage metaData = metadata[user];
+        metaData.ids[tokenId] = true;
+        metaData.stored.push(MetaData(
+            tokenId
         ));
 
-        // Delete information from original list
-        metaData.ids[token_id] = false;
-        metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
-        metaData.stored.pop();
+        // Remove from pending queue
+        pendingQueue[index] = pendingQueue[pendingQueue.length - 1];
+        pendingQueue.pop();
 
         return true;
     }
+
+    // Admin organization functions
 
     function changeOwner(address user) external onlyAdmin(msg.sender) {
         renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);

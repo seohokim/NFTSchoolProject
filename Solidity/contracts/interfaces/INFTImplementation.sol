@@ -16,6 +16,7 @@ interface INFTImplementation {
         uint256 id;
         address owner;
         MetaData info;
+        uint256 requestedTime;
     }
 
     function mint(address user, MetaData calldata data) external returns(bool);
