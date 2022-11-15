@@ -13,6 +13,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "./libs/DataTypes.sol";
 import "./utils/OwnableCustom.sol";
 import "./libs/PendingQueue.sol";
+import "./libs/MarketPlace.sol";
+
 
 contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT", "ONFT") {
     using Counters for Counters.Counter;
@@ -26,7 +28,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
     // Contract area
     // * Have relationship with Core NFT Contract
-    PendingQueue pendingQueueContract;
+    PendingQueue pdQueueCon;
+    MarketPlace marketPlace;
 
     constructor(address minter) {
         address _minter = minter;
@@ -37,8 +40,11 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         initializePermission(_minter, _burner);
 
         // Initialize Pending Queue
-        pendingQueueContract = new PendingQueue();
-        emit CoreInitialize(address(pendingQueueContract));
+        pdQueueCon = new PendingQueue();
+        marketPlace = new MarketPlace();
+
+        marketPlace.initializeMarketPlace();
+        emit CoreInitialize(address(pdQueueCon));
     }
 
     // Implementation for Users
@@ -91,7 +97,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     */
 
     function burningByAdmin(uint256 tokenId) external 
-        adminOrContract(address(pendingQueueContract)) returns (bool) {
+        adminOrContract(address(pdQueueCon)) returns (bool) {
         _burn(tokenId);
         return true;
     }
@@ -104,12 +110,12 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
 
         // Need to check this is already in pending queue
-        if (pendingQueueContract.isPending(token_id)) {
+        if (pdQueueCon.isPending(token_id)) {
             return false;
         }
         
         // Remove from user's Metadata, and insert into Pending Queue
-        pendingQueueContract.push(DataTypes.PendingMetadata(
+        pdQueueCon.push(DataTypes.PendingMetadata(
             token_id,
             msg.sender,
             metaData.stored[tokenIndex],
@@ -155,12 +161,12 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
     // Accepting request onlyOwner
     function acceptRequest() external onlyAdmin(msg.sender) returns (uint256) {
-        return pendingQueueContract.acceptRequest();
+        return pdQueueCon.acceptRequest();
     }
 
     // Restore pending element
     function restoreMetadata(address user, uint256 tokenId) external onlyAdmin(msg.sender) returns (bool) {
-        uint256 index = pendingQueueContract.findPendingMetadata(tokenId);
+        uint256 index = pdQueueCon.findPendingMetadata(tokenId);
         
         if (index == type(uint256).max) {
             return false;
@@ -174,7 +180,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         ));
 
         // Remove from pending queue
-        pendingQueueContract.remove(index);
+        pdQueueCon.remove(index);
         return true;
     }
 
