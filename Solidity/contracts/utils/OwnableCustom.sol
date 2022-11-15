@@ -3,7 +3,9 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract OwnableCustom is AccessControl {
+import "../interfaces/IOwnableCustom.sol";
+
+contract OwnableCustom is AccessControl, IOwnableCustom {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER");
 
@@ -27,6 +29,8 @@ contract OwnableCustom is AccessControl {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, minter);
         _setupRole(BURNER_ROLE, burner);
+
+        emit InitializePermission(minter, burner);
     }
 
     // Functions area
@@ -34,13 +38,19 @@ contract OwnableCustom is AccessControl {
     function changeOwner(address user) external onlyAdmin(msg.sender) {
         renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
         grantRole(DEFAULT_ADMIN_ROLE, user);
+
+        emit ChangeOwner(user);
     }
 
     function addMinter(address minter) external onlyAdmin(msg.sender) {
         grantRole(MINTER_ROLE, minter);
+
+        emit AddMinter(minter);
     }
 
     function removeMinter(address minter) external onlyAdmin(msg.sender) {
         renounceRole(MINTER_ROLE, minter);
+
+        emit RemoveMinter(minter);
     }
 }

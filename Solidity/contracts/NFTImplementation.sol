@@ -19,12 +19,13 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
     // Class member variables section
     Counters.Counter public currentTokenID;
-    PendingQueue pendingQueueContract;
-
     // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
     uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
-
     mapping(address => DataTypes.TokenMetadata) private metadata;
+
+    // Contract area
+    // * Have relationship with Core NFT Contract
+    PendingQueue pendingQueueContract;
 
     constructor(address minter) {
         address _minter = minter;
@@ -34,7 +35,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
         // Initialize Pending Queue
         pendingQueueContract = new PendingQueue();
-
+        emit CoreInitialize(address(pendingQueueContract));
     }
 
     // Implementation for Users
@@ -57,6 +58,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         metaData.stored.push(data);
 
         _mint(user, data.unique_id);                // Afterwards, should change to Counter (auto increments)
+        emit Mint(user, data.unique_id);
+
         return true;
     }
 
@@ -78,6 +81,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
             metaData.stored.pop();
         }
         _burn(unique_id);
+
+        emit Burn(user, unique_id);
         return true;
     }
 
@@ -105,6 +110,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         metaData.ids[token_id] = false;
         metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
         metaData.stored.pop();
+
+        emit RequestPending(msg.sender, token_id);
 
         return true;
     }
