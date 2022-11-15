@@ -22,6 +22,7 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
     uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
 
     mapping(address => TokenMetadata) private metadata;
+    PendingMetadata[] pendingQueue;
 
     // Modifiers and Events
     modifier onlyAdmin(address sender) {
@@ -88,6 +89,23 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
         return true;
     }
 
+    // Transfer ownership of each NFT items
+    function transfer_ownership(address user, uint256 token_id) external returns (bool) {
+        TokenMetadata storage metaData = metadata[user];
+        uint256 tokenIndex = _findTokenID(metaData, token_id);
+
+        require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID does ont exists");
+        require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
+
+        if (_isApprovedOrOwner(user, token_id) == false) {
+            approve(user, token_id);
+        }
+        safeTransferFrom(address(msg.sender), user, token_id);
+        return true;
+    }
+
+    // 
+
     // private functions
     function _findTokenID(TokenMetadata storage _metadata, uint256 unique_id) private view returns (uint256) {
         for (uint256 i = 0; i < _metadata.stored.length; i++) {
@@ -98,7 +116,44 @@ contract NFTImplementation is INFTImplementation, AccessControl, ERC721("OurNFT"
         return uint256(MAXIMUM_TOKEN_ID);
     }
 
+    function _isPending(uint256 token_id) private view returns (bool) {
+        for (uint256 i = 0; i < pendingQueue.length; i++) {
+            if (pendingQueue[i].id == token_id)
+                return true;
+        }
+        return false;
+    }
+
     // Admin Functions
+
+    // Burning request queue
+    function burn_pending(uint256 token_id) external returns (bool) {
+        TokenMetadata storage metaData = metadata[msg.sender];
+        uint256 tokenIndex = _findTokenID(metaData, token_id);
+
+        require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID issue");
+        require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
+
+        // Need to check this is already in pending queue
+        if (_isPending(token_id)) {
+            return false;
+        }
+        
+        // Remove from user's Metadata, and insert into Pending Queue
+        pendingQueue.push(PendingMetadata(
+            token_id,
+            msg.sender,
+            metaData.stored[tokenIndex]
+        ));
+
+        // Delete information from original list
+        metaData.ids[token_id] = false;
+        metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
+        metaData.stored.pop();
+
+        return true;
+    }
+
     function changeOwner(address user) external onlyAdmin(msg.sender) {
         renounceRole(DEFAULT_ADMIN_ROLE, msg.sender);
         grantRole(DEFAULT_ADMIN_ROLE, user);

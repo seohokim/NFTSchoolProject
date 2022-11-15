@@ -12,6 +12,12 @@ interface INFTImplementation {
         mapping(uint256 => bool) ids;
     }
 
+    struct PendingMetadata {
+        uint256 id;
+        address owner;
+        MetaData info;
+    }
+
     function mint(address user, MetaData calldata data) external returns(bool);
     function burn(address user, uint256 unique_id) external returns(bool);
 
