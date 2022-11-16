@@ -9,6 +9,7 @@ contract MarketPlace {
     address private NFTCore;
     address private owner;
     uint256 public constant AUCTION_PERIOD = 7 days;
+    uint256 public constant PERCENTAGE_FOR_FEE = 3;     // For contract profits
 
     struct TokenItemInfo {
         bool isForAuction;
@@ -36,6 +37,12 @@ contract MarketPlace {
     event ChangeItemCost(uint256 tokenID, uint256 newCost);
 
     event MarketCreated(uint256 marketID);
+    event MarketOpened(uint256 marketID);
+    event MarketClosed(uint256 marketID);
+    event MarketRemoved(uint256 marketID);
+    
+    event AuctionStarted(uint256 tokenID, uint256 marketID, uint256 startCost, uint256 ended);
+    event AuctionEnded(uint256 tokenID, address nextOwner, uint256 lastCost);
 
     modifier onlyCore {
         require(NFTCore == msg.sender, "Only allowed for NFT Core");
@@ -93,16 +100,57 @@ contract MarketPlace {
         return true;
     }
 
-    function registerAuction() external returns (bool) {}
-    function startAuction() external returns (bool) {}
-    function endAuction() external returns (bool) {}
-
     // * Auction - Detail
     // 1. Auction needs marketplaces for each kind
     // 2. Auction should always open until the period is ended.
     // 3. Auction need to gather participants for starting auction
 
+    function startAuction(address _owner, uint256 token, uint256 marketID, uint256 startCost) external onlyCore isMarketOpen(marketID) {
+        MarketInfo storage marketInfo = market[marketID];
+        TokenItemInfo storage tokenInfo = marketInfo.tokenList[token];
 
+        require(tokenInfo.lastOwner == address(0), "This item already initialized");
+
+        tokenInfo.isForAuction = true;
+        tokenInfo.lastOwner = _owner;
+        tokenInfo.lastParticipant = address(0);
+        tokenInfo.deadline = block.timestamp + AUCTION_PERIOD;
+        tokenInfo.cost = startCost;
+
+        emit AuctionStarted(token, marketID, startCost, tokenInfo.deadline);
+    }
+
+    function endAuction(uint256 token, uint256 marketID) external onlyCore isMarketOpen(marketID) returns (bool) {
+        MarketInfo storage marketInfo = market[marketID];
+        TokenItemInfo storage tokenInfo = marketInfo.tokenList[token];
+
+        require(block.timestamp >= tokenInfo.deadline, "This auction is not ended");
+        require(tokenInfo.lastOwner != address(0), "This auction is not initialized");
+
+        address lastOwner = tokenInfo.lastOwner;
+        address lastParticipant = tokenInfo.lastParticipant;
+        uint256 cost = tokenInfo.cost;
+        uint256 fee = _calculateFee(cost);
+
+        userDepositedBalances[lastOwner] += (cost - fee);
+        userDepositedBalances[address(this)] += fee;
+
+        delete marketInfo.tokenList[token];
+        if (lastParticipant != address(0)) {
+            _depositNFT(lastParticipant, token);
+            return true;
+        }
+        else {
+            _depositNFT(lastOwner, token);          // Restore token to last Owner of NFT
+        }
+
+        emit AuctionEnded(token, lastParticipant == address(0) ? lastOwner : lastParticipant, cost);
+        return false;
+    }
+
+    function _depositNFT(address nextOwner, uint256 token) private {
+
+    }
 
     // * Selling - Detail
     // 1. Each user can sell their NFT to other users directly.
@@ -181,7 +229,12 @@ contract MarketPlace {
     }
 
     // Getter & Setter
-    function getUserBalanceOnMarket(address user) external view returns (uint256) {
+    function getUserBalanceOnMarket(address user) public view returns (uint256) {
         return userDepositedBalances[user];
+    }
+
+    // Utils for MarketPlace
+    function _calculateFee(uint256 originalAmount) private pure returns (uint256) {
+        return originalAmount * (PERCENTAGE_FOR_FEE / 100);
     }
 }
