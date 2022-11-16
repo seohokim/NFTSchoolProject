@@ -7,6 +7,7 @@ import "../utils/Util.sol";
 
 contract MarketPlace {
     address private NFTCore;
+    address private owner;
     uint256 public constant AUCTION_PERIOD = 7 days;
 
     struct TokenItemInfo {
@@ -27,13 +28,22 @@ contract MarketPlace {
     mapping(uint256 => bool) marketExists;
     mapping(uint256 => MarketInfo) market;
 
+    event InitializeMarketPlace(address owner, address core);
+
     event ApplyItem(address owner, uint256 tokenID, uint256 cost);
     event AlreadyApply(address owner, uint256 tokenID);
     event DeleteItem(address owner, uint256 tokenID);
     event ChangeItemCost(uint256 tokenID, uint256 newCost);
 
+    event MarketCreated(uint256 marketID);
+
     modifier onlyCore {
         require(NFTCore == msg.sender, "Only allowed for NFT Core");
+        _;
+    }
+
+    modifier onlyOwner {
+        require(owner == msg.sender, "You are not owner");
         _;
     }
 
@@ -42,18 +52,47 @@ contract MarketPlace {
         _;
     }
 
-    function initializeMarketPlace() external {
+    function initializeMarketPlace(address _owner) external {
+        owner = _owner;
         NFTCore = msg.sender;
         require(Util.isContract(NFTCore), "NFTCore must be contract");
+
+        emit InitializeMarketPlace(owner, NFTCore);
     }
 
     // MarketPlace need two implementation
     // 1. Auction
     // 2. Selling
-    function makeMarket() external returns (uint256 marketID) {}
-    function openMarket(uint256 marketID) external returns (bool) {}
-    function closeMarket(uint256 marketID) external returns (bool) {}
-    function removeMarket(uint256 marketID) external returns (bool) {}
+    function makeMarket(uint256 marketID) external onlyOwner {
+        require(!marketExists[marketID], "Market already exists");
+        marketExists[marketID] = true;
+        
+        MarketInfo storage marketInfo = market[marketID];
+        marketInfo.isOpened = false;
+        marketInfo.marketID = marketID;
+
+        emit MarketCreated(marketID);
+    }
+
+    function openMarket(uint256 marketID) external onlyOwner returns (bool) {
+        require(marketExists[marketID], "Market is not exists, create first!");
+
+        market[marketID].isOpened = true;
+        return true;
+    }
+
+    function closeMarket(uint256 marketID) external onlyOwner returns (bool) {
+        require(marketExists[marketID] && market[marketID].isOpened == true, "Market is not opened");
+        market[marketID].isOpened = false;
+        return true;
+    }
+    function removeMarket(uint256 marketID) external onlyOwner returns (bool) {
+        require(marketExists[marketID] && market[marketID].isOpened == false, "Market is not closed");
+
+        // Need settle logics in here (TODO)
+        return true;
+    }
+
     function registerAuction() external returns (bool) {}
     function startAuction() external returns (bool) {}
     function endAuction() external returns (bool) {}
@@ -85,32 +124,32 @@ contract MarketPlace {
         }
     */
 
-    function applyItem(address owner, uint256 token, uint256 marketId, uint256 cost) external onlyCore isMarketOpen(marketId) returns (bool) {
+    function applyItem(address _owner, uint256 token, uint256 marketId, uint256 cost) external onlyCore isMarketOpen(marketId) returns (bool) {
         MarketInfo storage marketInfo = market[marketId];
         TokenItemInfo storage item = marketInfo.tokenList[token];
 
         if (item.lastOwner != address(0)) {
-            emit AlreadyApply(owner, token);
+            emit AlreadyApply(_owner, token);
             return false;
         }
 
         item.isForAuction = false;
-        item.lastOwner = owner;
+        item.lastOwner = _owner;
         item.lastParticipant = address(0);
         item.deadline = 0x00;               // deadline field does not used
         item.cost = cost;
 
-        emit ApplyItem(owner, token, cost);
+        emit ApplyItem(_owner, token, cost);
         return true;
     }
 
     function changeItemCost(
-        address owner, uint256 token, uint256 marketId, uint256 newCost
+        address _owner, uint256 token, uint256 marketId, uint256 newCost
     ) external onlyCore isMarketOpen(marketId) returns (bool) {
         MarketInfo storage marketInfo = market[marketId];
         TokenItemInfo storage item = marketInfo.tokenList[token];
 
-        require(item.lastOwner == owner, "This token is not your token");
+        require(item.lastOwner == _owner, "This token is not your token");
         item.cost = newCost;
 
         emit ChangeItemCost(token, newCost);
@@ -118,15 +157,15 @@ contract MarketPlace {
     }
 
     function deleteItem(
-        address owner, uint256 token, uint256 marketId
+        address _owner, uint256 token, uint256 marketId
     ) external onlyCore isMarketOpen(marketId) returns (bool) {
         MarketInfo storage marketInfo = market[marketId];
         TokenItemInfo storage item = marketInfo.tokenList[token];
 
-        require(item.lastOwner == owner, "This token is not your token");
+        require(item.lastOwner == _owner, "This token is not your token");
         delete marketInfo.tokenList[token];
 
-        emit DeleteItem(owner, token);
+        emit DeleteItem(_owner, token);
         return true;
     }
 

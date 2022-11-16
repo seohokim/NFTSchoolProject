@@ -43,7 +43,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         pdQueueCon = new PendingQueue();
         marketPlace = new MarketPlace();
 
-        marketPlace.initializeMarketPlace();
+        marketPlace.initializeMarketPlace(msg.sender);
         emit CoreInitialize(address(pdQueueCon));
     }
 
