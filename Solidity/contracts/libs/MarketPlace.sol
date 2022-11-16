@@ -153,8 +153,11 @@ contract MarketPlace {
 
         userDepositedBalances[lastOwner] += (cost - fee);
         userDepositedBalances[address(this)] += fee;
+        userDepositedBalances[lastParticipant] -= cost;
 
         delete marketInfo.tokenList[token];
+        emit AuctionEnded(token, lastParticipant == address(0) ? lastOwner : lastParticipant, cost);
+
         if (lastParticipant != address(0)) {
             _depositNFT(lastParticipant, token);
             return true;
@@ -162,9 +165,21 @@ contract MarketPlace {
         else {
             _depositNFT(lastOwner, token);          // Restore token to last Owner of NFT
         }
-
-        emit AuctionEnded(token, lastParticipant == address(0) ? lastOwner : lastParticipant, cost);
         return false;
+    }
+
+    // This is methods for deposit enough balances and withdraw
+    // 1. deposit
+    // 2. withdraw
+    function deposit(address user, uint256 amount) external onlyCore {
+        require(amount > 0, "Amount must be greater than 0");
+        userDepositedBalances[user] += amount;
+    } 
+
+    function withdraw(address user, uint256 amount) external onlyCore {
+        require(amount > 0, "Amount must be greater than 0");
+        require(userDepositedBalances[user] >= amount, "No enough balances for withdraw");
+        userDepositedBalances[user] -= amount;
     }
 
     function _depositNFT(address nextOwner, uint256 token) private {
