@@ -43,6 +43,7 @@ contract MarketPlace {
     
     event AuctionStarted(uint256 tokenID, uint256 marketID, uint256 startCost, uint256 ended);
     event AuctionEnded(uint256 tokenID, address nextOwner, uint256 lastCost);
+    event AuctionNewSuggest(uint256 tokenID, uint256 marketID, address participant, uint256 newCost);
 
     modifier onlyCore {
         require(NFTCore == msg.sender, "Only allowed for NFT Core");
@@ -118,6 +119,24 @@ contract MarketPlace {
         tokenInfo.cost = startCost;
 
         emit AuctionStarted(token, marketID, startCost, tokenInfo.deadline);
+    }
+
+    function suggest(address suggester, uint256 token, uint256 marketID, uint256 suggestCost) external onlyCore isMarketOpen(marketID) returns (bool) {
+        MarketInfo storage marketInfo = market[marketID];
+        TokenItemInfo storage tokenInfo = marketInfo.tokenList[token];
+
+        require(tokenInfo.isForAuction, "This is not for auction item");
+        require(suggester != tokenInfo.lastOwner, "Owner cannot suggest new cost");
+        if (tokenInfo.cost >= suggestCost) {
+            return false;
+        }
+
+        require(suggestCost <= userDepositedBalances[suggester], "User does not has enough balance for betting");
+        tokenInfo.lastParticipant = suggester;
+        tokenInfo.cost = suggestCost;
+
+        emit AuctionNewSuggest(token, marketID, suggester, suggestCost);
+        return true;
     }
 
     function endAuction(uint256 token, uint256 marketID) external onlyCore isMarketOpen(marketID) returns (bool) {
