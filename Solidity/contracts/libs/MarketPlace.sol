@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
+import "../NFTImplementation.sol";
 import "../libs/DataTypes.sol";
-
 import "../utils/Util.sol";
 
 contract MarketPlace {
@@ -183,7 +183,12 @@ contract MarketPlace {
     }
 
     function _depositNFT(address nextOwner, uint256 token) private {
+        address ownerOf = NFTImplementation(NFTCore).ownerOf(token);
 
+        if (ownerOf == nextOwner) {
+            return;
+        }
+        NFTImplementation(NFTCore).transferForMarket(nextOwner, token);
     }
 
     // * Selling - Detail

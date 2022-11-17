@@ -31,6 +31,10 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
         _;
     }
 
+    modifier onlyAllowed(address contr) {
+        _;
+    }
+
     modifier adminOrContract(address contr) {
         require(msg.sender == address(contr) ||
                 msg.sender == owner, "Admin or Pending Queue only can call this");
