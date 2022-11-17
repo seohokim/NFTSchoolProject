@@ -268,4 +268,25 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     function suggestToAuction(uint256 marketID, uint256 tokenID, uint256 suggestCost) external returns (bool) {
         return marketPlace.suggest(msg.sender, tokenID, marketID, suggestCost);
     }
+
+    // For selling mechanism between users
+    function applyItem(uint256 marketID, uint256 tokenID, uint256 cost) external returns (bool) {
+        return marketPlace.applyItem(msg.sender, tokenID, marketID, cost);
+    }
+
+    function changeItemCost(uint256 marketID, uint256 tokenID, uint256 newCost) external returns (bool) {
+        return marketPlace.changeItemCost(msg.sender, tokenID, marketID, newCost);
+    }
+
+    function deleteItem(uint256 marketID, uint256 tokenID) external returns (bool) {
+        return marketPlace.deleteItem(msg.sender, tokenID, marketID);
+    }
+
+    function purchaseItem(uint256 marketID, uint256 tokenID) external payable returns (bool) {
+        uint256 tokenNum = marketPlace.purchase(tokenID, marketID);
+        tokenNum;
+        // tokenNum transfer to purchasing user
+        // TODO
+        return true;
+    }
 }
