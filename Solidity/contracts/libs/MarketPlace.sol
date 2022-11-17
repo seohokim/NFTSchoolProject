@@ -135,6 +135,8 @@ contract MarketPlace {
 
         require(tokenInfo.isForAuction, "This is not for auction item");
         require(suggester != tokenInfo.lastOwner, "Owner cannot suggest new cost");
+        require(block.timestamp < tokenInfo.deadline, "This auction is already ended");
+
         if (tokenInfo.cost >= suggestCost) {
             return false;
         }
@@ -147,10 +149,11 @@ contract MarketPlace {
         return true;
     }
 
-    function endAuction(uint256 token, uint256 marketID) external onlyCore isMarketOpen(marketID) returns (bool) {
+    function endAuction(address initializer, uint256 token, uint256 marketID) external onlyCore isMarketOpen(marketID) returns (bool) {
         MarketInfo storage marketInfo = market[marketID];
         TokenItemInfo storage tokenInfo = marketInfo.tokenList[token];
 
+        require(tokenInfo.lastOwner == initializer, "You are not owner of this auction");
         require(block.timestamp >= tokenInfo.deadline, "This auction is not ended");
         require(tokenInfo.lastOwner != address(0), "This auction is not initialized");
 

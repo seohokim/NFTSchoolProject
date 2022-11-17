@@ -242,7 +242,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         selfdestruct(payable(owner));
     }
 
-    // For marketplace methods
+    // Related with MarketPlace contract
     function transferForMarket(address user, uint256 tokenID) external onlyAllowed(msg.sender) {
         _safeTransfer(ownerOf(tokenID), user, tokenID, "");
     }
@@ -255,5 +255,17 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
     function withdrawFromMarket(uint256 amount) external {
         marketPlace.withdraw(msg.sender, amount);
+    }
+
+    function startAuction(uint256 marketID, uint256 tokenID, uint256 startCost) external {
+        marketPlace.startAuction(msg.sender, tokenID, marketID, startCost);
+    }
+
+    function endAuction(uint256 marketID, uint256 tokenID) external {
+        marketPlace.endAuction(msg.sender, tokenID, marketID);
+    }
+
+    function suggestToAuction(uint256 marketID, uint256 tokenID, uint256 suggestCost) external returns (bool) {
+        return marketPlace.suggest(msg.sender, tokenID, marketID, suggestCost);
     }
 }

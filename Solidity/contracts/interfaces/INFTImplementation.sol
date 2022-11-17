@@ -17,4 +17,13 @@ interface INFTImplementation {
 
     function acceptRequest() external returns (uint256);
     function restoreMetadata(address user, uint256 tokenId) external returns (bool);
+    function terminate() payable external;
+
+    // For MarketPlace
+    function transferForMarket(address user, uint256 tokenID) external;
+    function depositToMarket(uint256 amount) external;
+    function withdrawFromMarket(uint256 amount) external;
+    function startAuction(uint256 marketID, uint256 tokenID, uint256 startCost) external;
+    function endAuction(uint256 marketID, uint256 tokenID) external;
+    function suggestToAuction(uint256 marketID, uint256 tokenID, uint256 suggestCost) external returns (bool);
 }
