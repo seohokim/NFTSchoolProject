@@ -60,18 +60,50 @@ describe("MarketPlace Testing", function () {
     });
 
     it("#makeMarket()", async function () {
-
+        await expect(
+            MarketPlaceInst.connect(owner).makeMarket(0x1)
+        ).to.be.emit(MarketPlaceInst, "MarketCreated");
     });
 
     it("#openMarket()", async function () {
-
+        await expect(
+            MarketPlaceInst.connect(user1).openMarket(0x1)
+        ).to.be.revertedWith("You are not owner");
+        await MarketPlaceInst.connect(owner).makeMarket(0x1);
+        await expect(
+            MarketPlaceInst.connect(owner).openMarket(0x1)
+        ).to.be.emit(MarketPlaceInst, "MarketOpened");
+        await expect(
+            MarketPlaceInst.connect(owner).openMarket(0x3)
+        ).to.be.revertedWith("Market is not exists, create first!");
     });
 
     it("#closeMarket()", async function () {
-
+        await MarketPlaceInst.connect(owner).makeMarket(0x1);
+        await MarketPlaceInst.connect(owner).openMarket(0x1);
+        await expect(
+            MarketPlaceInst.connect(owner).closeMarket(0x2)
+        ).to.be.revertedWith("Market is not opened");
+        await expect(
+            MarketPlaceInst.connect(owner).closeMarket(0x1)
+        ).to.be.emit(MarketPlaceInst, "MarketClosed");
+        const result = await MarketPlaceInst.market(0x1);
+        expect(result.isOpened).to.equal(false);
     });
 
     it("#removeMarket()", async function () {
+        // TODO
+    });
 
+    it("#startAuction()", async function () {
+        // TODO
+    });
+
+    it("#endAuction()", async function () {
+        // TODO
+    });
+
+    it("#suggest()", async function () {
+        // TODO
     });
 });

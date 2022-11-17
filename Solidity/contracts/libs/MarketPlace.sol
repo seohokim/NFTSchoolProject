@@ -27,9 +27,9 @@ contract MarketPlace {
         mapping(uint256 => TokenItemInfo) tokenList;
     }
 
-    mapping(address => uint256) userDepositedBalances;
-    mapping(uint256 => bool) marketExists;
-    mapping(uint256 => MarketInfo) market;
+    mapping(address => uint256) public userDepositedBalances;
+    mapping(uint256 => bool) public marketExists;
+    mapping(uint256 => MarketInfo) public market;
 
     event InitializeMarketPlace(address owner, address core);
 
@@ -90,18 +90,22 @@ contract MarketPlace {
         require(marketExists[marketID], "Market is not exists, create first!");
 
         market[marketID].isOpened = true;
+        emit MarketOpened(marketID);
         return true;
     }
 
     function closeMarket(uint256 marketID) external onlyOwner returns (bool) {
         require(marketExists[marketID] && market[marketID].isOpened == true, "Market is not opened");
         market[marketID].isOpened = false;
+
+        emit MarketClosed(marketID);
         return true;
     }
     function removeMarket(uint256 marketID) external onlyOwner returns (bool) {
         require(marketExists[marketID] && market[marketID].isOpened == false, "Market is not closed");
 
         // Need settle logics in here (TODO)
+        emit MarketRemoved(marketID);
         return true;
     }
 
