@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
 import { expect } from "chai";
 
 import { Signer, Contract, ContractFactory } from "ethers";
@@ -81,5 +81,46 @@ describe("NFT Contract testing", function () {
         const result_2 = await NFTImplementation.isExists(user2.getAddress(), 0x1234);
         expect(result_1).to.equal(false);
         expect(result_2).to.equal(true);
+    });
+
+    it("#restoreMetadata()", async function () {
+        // First we have to submit burning request
+        await NFTImplementation.connect(minter).mint(user1.getAddress(), {
+            unique_id: 0x1234
+        });
+        await NFTImplementation.connect(user1).requestBurning(0x1234);
+        const result = await PendingQueueInst.pendingQueue(0);
+        expect(result.id).to.equal(0x1234);
+        expect(result.owner).to.equal(await user1.getAddress());
+
+        // Second, cancel this
+        await NFTImplementation.connect(owner).restoreMetadata(user1.getAddress(), 0x1234);
+        expect(await NFTImplementation.isExists(user1.getAddress(), 0x1234)).to.equal(true);
+    });
+
+    it("#acceptRequest()", async function () {
+        // First we have to submit burning request
+        await NFTImplementation.connect(minter).mint(user1.getAddress(), {
+            unique_id: 0x1234
+        });
+        await NFTImplementation.connect(user1).requestBurning(0x1234);
+
+        await NFTImplementation.connect(minter).mint(user1.getAddress(), {
+            unique_id: 0x1235
+        });
+        await NFTImplementation.connect(user1).requestBurning(0x1235);
+
+        // Change block.timestamp
+        await network.provider.send("evm_increaseTime", [60*60*24*10]);
+        await network.provider.send("evm_mine");
+
+        await NFTImplementation.connect(minter).mint(user1.getAddress(), {
+            unique_id: 0x1236
+        });
+        await NFTImplementation.connect(user1).requestBurning(0x1236);
+
+        await NFTImplementation.acceptRequest();
+        const result = await PendingQueueInst.pendingQueue(0);
+        expect(result.id).to.equal(0x1236);
     });
 });
