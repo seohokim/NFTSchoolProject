@@ -10,11 +10,12 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
+
 import "./libs/DataTypes.sol";
 import "./utils/OwnableCustom.sol";
 import "./libs/PendingQueue.sol";
 import "./libs/MarketPlace.sol";
-
+import "./governance/Governance.sol";
 
 contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT", "ONFT") {
     using Counters for Counters.Counter;
@@ -30,6 +31,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     // * Have relationship with Core NFT Contract
     PendingQueue pdQueueCon;
     MarketPlace marketPlace;
+    Governance governance;
 
     constructor(address minter) {
         address _minter = minter;
@@ -42,6 +44,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         // Initialize Pending Queue
         pdQueueCon = new PendingQueue();
         marketPlace = new MarketPlace();
+        governance = new Governance(msg.sender, address(this));
 
         marketPlace.initializeMarketPlace(msg.sender);
         emit CoreInitialize(address(pdQueueCon));
