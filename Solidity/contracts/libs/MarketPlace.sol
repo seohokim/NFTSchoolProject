@@ -5,6 +5,8 @@ import "../NFTImplementation.sol";
 import "../libs/DataTypes.sol";
 import "../utils/Util.sol";
 
+import "hardhat/console.sol";
+
 contract MarketPlace {
     address private NFTCore;
     address private owner;
@@ -63,7 +65,9 @@ contract MarketPlace {
     function initializeMarketPlace(address _owner) external {
         owner = _owner;
         NFTCore = msg.sender;
-        require(Util.isContract(NFTCore), "NFTCore must be contract");
+        // console.log(NFTCore);
+        // Ps. Mistake, the code size will be set after Contract constructor was called.
+        // require(Util.isContract(NFTCore), "NFTCore must be contract");
 
         emit InitializeMarketPlace(owner, NFTCore);
     }

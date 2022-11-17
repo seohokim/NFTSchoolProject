@@ -24,14 +24,22 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     address private owner;
     Counters.Counter public currentTokenID;
     // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
-    uint256 public constant MAXIMUM_TOKEN_ID = 10000000000000000000000;
-    mapping(address => DataTypes.TokenMetadata) private metadata;
+    uint256 public constant MAXIMUM_TOKEN_ID = type(uint256).max;
+
+    /*
+    struct TokenMetadata {
+        address owner;
+        MetaData[] stored;
+        mapping(uint256 => bool) ids;
+    }
+    */
+    mapping(address => DataTypes.TokenMetadata) public metadata;
 
     // Contract area
     // * Have relationship with Core NFT Contract
-    PendingQueue pdQueueCon;
-    MarketPlace marketPlace;
-    Governance governance;
+    PendingQueue public pdQueueCon;
+    MarketPlace public marketPlace;
+    Governance public governance;
 
     constructor(address minter) {
         address _minter = minter;
@@ -39,15 +47,27 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
         owner = address(msg.sender);
 
-        initializePermission(_minter, _burner);
-
         // Initialize Pending Queue
         pdQueueCon = new PendingQueue();
         marketPlace = new MarketPlace();
         governance = new Governance(msg.sender, address(this));
 
+        // Initializing
+        initializePermission(_minter, _burner);
         marketPlace.initializeMarketPlace(msg.sender);
-        emit CoreInitialize(address(pdQueueCon));
+        _initializeAllowedContract();
+
+        emit CoreInitialize(address(pdQueueCon), address(marketPlace), address(governance));
+    }
+
+    function _initializeAllowedContract() private onlyAdmin(msg.sender) {
+        addAllowedContract(address(pdQueueCon));
+        addAllowedContract(address(marketPlace));
+        addAllowedContract(address(governance));
+    }
+
+    function isExists(address user, uint256 tokenID) public view returns (bool) {
+        return metadata[user].ids[tokenID] == true;
     }
 
     // Implementation for Users
@@ -137,11 +157,14 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
     // Transfer ownership of each NFT items
     function transferOwnership(address user, uint256 token_id) external returns (bool) {
-        DataTypes.TokenMetadata storage metaData = metadata[user];
+        DataTypes.TokenMetadata storage metaData = metadata[msg.sender];
         uint256 tokenIndex = _findTokenID(metaData, token_id);
 
         require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID does ont exists");
         require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
+
+        _removeFromMetadata(msg.sender, token_id);
+        _addToMetadata(user, token_id);
 
         if (_isApprovedOrOwner(user, token_id) == false) {
             approve(user, token_id);
@@ -158,6 +181,29 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
             }
         }
         return uint256(MAXIMUM_TOKEN_ID);
+    }
+
+    function _addToMetadata(address user, uint256 tokenID) private {
+        DataTypes.TokenMetadata storage metaData = metadata[user];
+
+        if (metaData.owner == address(0)) {
+            metaData.owner = user;
+        }
+        metaData.ids[tokenID] = true;
+        metaData.stored.push(DataTypes.MetaData(
+            tokenID
+        ));
+    }
+
+    function _removeFromMetadata(address user, uint256 tokenID) private {
+        DataTypes.TokenMetadata storage metaData = metadata[user];
+        uint256 tokenIndex = _findTokenID(metaData, tokenID);
+
+        metaData.ids[tokenID] = false;
+
+        delete metaData.stored[tokenIndex];
+        metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
+        metaData.stored.pop();
     }
 
     // Admin Functions

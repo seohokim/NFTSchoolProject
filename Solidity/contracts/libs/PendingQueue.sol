@@ -5,7 +5,7 @@ import "../libs/DataTypes.sol";
 
 contract PendingQueue {
     address private core;
-    DataTypes.PendingMetadata[] pendingQueue;
+    DataTypes.PendingMetadata[] public pendingQueue;
     uint256 public constant PERIOD = 7 days;
 
     modifier onlyNFT() {

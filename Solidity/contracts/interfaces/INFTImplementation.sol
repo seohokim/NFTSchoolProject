@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "../libs/DataTypes.sol";
 
 interface INFTImplementation {
-    event CoreInitialize(address pendingQueue);
+    event CoreInitialize(address pendingQueue, address marketPlace, address governance);
     event Mint(address user, uint256 tokenId);
     event Burn(address user, uint256 tokenId);
     event RequestPending(address user, uint256 tokenId);

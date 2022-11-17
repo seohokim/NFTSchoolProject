@@ -5,9 +5,13 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 import "../interfaces/IOwnableCustom.sol";
 
+import "../utils/Util.sol";
+
+
 contract OwnableCustom is AccessControl, IOwnableCustom {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
     bytes32 public constant BURNER_ROLE = keccak256("BURNER");
+    bytes32 public constant ALLOW_ROLE = keccak256("ALLOW");
 
     address private owner;
 
@@ -32,6 +36,7 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
     }
 
     modifier onlyAllowed(address contr) {
+        require(hasRole(ALLOW_ROLE, contr), "YOU ARE NOT ALLOWED");
         _;
     }
 
@@ -59,6 +64,11 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
 
         owner = address(user);
         emit ChangeOwner(user);
+    }
+
+    function addAllowedContract(address contr) public onlyAdmin(msg.sender) {
+        require(Util.isContract(contr), "Parameter must be Contract address, not user");
+        grantRole(ALLOW_ROLE, contr);
     }
 
     function addMinter(address minter) external onlyAdmin(msg.sender) {
