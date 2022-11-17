@@ -10,6 +10,8 @@ describe("MarketPlace Testing", function () {
     let NFTImplementation : Contract;
     let PendingQueueFactory : ContractFactory;
     let PendingQueueInst : Contract;
+    let MarketPlaceFactory : ContractFactory;
+    let MarketPlaceInst : Contract;
 
     let PendingQueue;
     let MarketPlace;
@@ -41,13 +43,35 @@ describe("MarketPlace Testing", function () {
 
         PendingQueueFactory = await ethers.getContractFactory('PendingQueue');
         PendingQueueInst = await PendingQueueFactory.attach(PendingQueue);
+    
+        MarketPlaceFactory = await ethers.getContractFactory('MarketPlace');
+        MarketPlaceInst = await MarketPlaceFactory.attach(MarketPlace);
     });
 
     it("#deposit()", async function () {
-
+        await NFTImplementation.connect(user1).depositToMarket(1000);
+        expect(await MarketPlaceInst.getUserBalanceOnMarket(user1.getAddress())).to.equal(1000);
     });
 
     it("#withdraw()", async function () {
+        await NFTImplementation.connect(user1).depositToMarket(1000);
+        await NFTImplementation.connect(user1).withdrawFromMarket(500);
+        expect(await MarketPlaceInst.getUserBalanceOnMarket(user1.getAddress())).to.equal(500);
+    });
+
+    it("#makeMarket()", async function () {
+
+    });
+
+    it("#openMarket()", async function () {
+
+    });
+
+    it("#closeMarket()", async function () {
+
+    });
+
+    it("#removeMarket()", async function () {
 
     });
 });
