@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel = "stylesheet", href="{{ url_for('static', filename='login.css')}}">
+    </head>
+<body>
+    <div class = "loginBar">
+<!--<a href="/input/1"> 리다이렉션 이미지를 클릭하면 /input/1 실행, a태그로 링크 걸기-->
+<a href = {{ url_for('userHome') }}>
+login
+</div>
+    <div class = "adminloginBar">
+        adminlogin
+</div>
+
+</a>
+
+</body>
+</html>
