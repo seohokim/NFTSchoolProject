@@ -57,4 +57,8 @@ contract Governance is IGovernance, Ownable {
         reportedQueue.pop();
         return value;
     }
+
+    function giveReward(address user, uint256 amount) external payable {
+        payable(user).call{value: amount};
+    }
 }
