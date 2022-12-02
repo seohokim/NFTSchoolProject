@@ -17,6 +17,8 @@ import "./libs/PendingQueue.sol";
 import "./libs/MarketPlace.sol";
 import "./governance/Governance.sol";
 
+import "./interfaces/IDepositPool.sol";
+
 contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT", "ONFT") {
     using Counters for Counters.Counter;
 
@@ -40,6 +42,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     PendingQueue public pdQueueCon;
     MarketPlace public marketPlace;
     Governance public governance;
+
+    IDepositPool public depositPool;
 
     constructor(address minter) {
         address _minter = minter;
@@ -66,6 +70,10 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         addAllowedContract(address(governance));
     }
 
+    function setDepositPool(address depositPoolAddress) public onlyAdmin(msg.sender) {
+        depositPool = IDepositPool(depositPoolAddress);
+    }
+
     function isExists(address user, uint256 tokenID) public view returns (bool) {
         return metadata[user].ids[tokenID] == true;
     }
@@ -74,10 +82,15 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     // 1. Basic Minting, Burning implementation
     // 2. Basic Transferring implementation
     // 3. Auction implementation
-    function mint(address user, DataTypes.MetaData calldata data) external onlyMinter(msg.sender) returns(bool) {
+    function mint(address user, DataTypes.MetaData calldata data) external payable onlyMinter(msg.sender) returns(bool) {
         // Minting with corresponding initialize fee (0.00001 ether)
         // Just for real network deploying, not development phase
-        // require(msg.value >= 0.00001 ether, "Need at least 0.00001 ether for minting");
+
+        // 만약 Governance에서 불법적인 사용자를 reporting 한 것이 1회 이상이고 이게 실제로 악의적인 사용자를 리포트를 한 경우면
+        // 1회 수수료를 면제할 수 있도록 해줌
+        require(governance.popReportingCounter(msg.sender) >= 1 || msg.value >= 0.00001 ether, "Need at least 0.00001 ether for minting");
+        depositPool.addDeposit(address(msg.sender), msg.value);         // Deposit to DepositPool for support liquidity
+
         // First, check this is first minting on target user
         DataTypes.TokenMetadata storage metaData = metadata[user];
         if (metaData.owner == address(0)) {

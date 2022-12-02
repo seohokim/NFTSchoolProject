@@ -58,7 +58,14 @@ contract Governance is IGovernance, Ownable {
         return value;
     }
 
-    function giveReward(address user, uint256 amount) external payable {
-        payable(user).call{value: amount};
+    function popReportingCounter(address user) external returns(uint256) {
+        uint256 poped = reportedCounter[user];
+        reportedCounter[user] = reportedCounter[user] - 1;
+
+        return poped;
+    }
+
+    function giveReward(address user) external {
+        reportedCounter[user] = reportedCounter[user] + 1;
     }
 }

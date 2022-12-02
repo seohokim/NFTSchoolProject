@@ -14,5 +14,7 @@ interface IGovernance {
     function unban(address user) external returns (bool);
     function report(address from, address reported, bytes memory description) external payable;
     function out() external returns (Reported memory);
-    function giveReward(address user, uint256 amount) external payable;
+
+    function popReportingCounter(address user) external returns(uint256);
+    function giveReward(address user) external;
 }
