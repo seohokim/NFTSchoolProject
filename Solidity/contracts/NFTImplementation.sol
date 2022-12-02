@@ -88,8 +88,11 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
         // 만약 Governance에서 불법적인 사용자를 reporting 한 것이 1회 이상이고 이게 실제로 악의적인 사용자를 리포트를 한 경우면
         // 1회 수수료를 면제할 수 있도록 해줌
-        require(governance.popReportingCounter(msg.sender) >= 1 || msg.value >= 0.00001 ether, "Need at least 0.00001 ether for minting");
-        depositPool.addDeposit(address(msg.sender), msg.value);         // Deposit to DepositPool for support liquidity
+        // 이 때 만약 보증금을 제공하는 상황이라면 0.001 이더 이상을 전달해야지 등록이 가능하도록 만들며, 만일 이를 취소했을 경우에는 보증금을 전부 돌려주도록 만듦
+        require(governance.popReportingCounter(msg.sender) >= 1 || msg.value >= 0.001 ether, "Need at least 0.001 ether for minting");
+
+        uint256 tokenID = data.unique_id;           // will revised
+        depositPool.addNFTDeposit(msg.sender, tokenID, msg.value);
 
         // First, check this is first minting on target user
         DataTypes.TokenMetadata storage metaData = metadata[user];
@@ -223,7 +226,20 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
 
     // Accepting request onlyOwner
     function acceptRequest() external onlyAdmin(msg.sender) returns (uint256) {
-        return pdQueueCon.acceptRequest();
+        uint256 accepted = 0;
+        DataTypes.PendingMetadata memory pending = pdQueueCon.acceptRequest();
+
+        while (pending.owner != address(0)) {
+            // 해당 사용자가 해당 토큰을 생성할 떄 예치한 보증금을 되돌려줌
+            address ownerOfToken = pending.owner;
+            uint256 tokenID = pending.id;
+
+            depositPool.deleteNFTDeposit(ownerOfToken, tokenID);            // 내부에서 해당 유저가 가진 해당 tokenID에 해당하는 deposit을 사용자에게 되돌려줌 (Ether를 기준으로 동작))
+            accepted += 1;
+
+            pending = pdQueueCon.acceptRequest();                           // 큐에 존재하는 다음 요소를 새로 꺼내서 처리
+        }
+        return accepted;
     }
 
     // Restore pending element
