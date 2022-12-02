@@ -11,6 +11,8 @@ contract Governance is IGovernance, Ownable {
     address private nftCore;
 
     mapping(address => uint256) banList;
+    Reported[] reportedQueue;
+    mapping(address => uint256) reportedCounter;
 
     constructor(address owner, address core) {
         governanceOwner = owner;
@@ -38,5 +40,21 @@ contract Governance is IGovernance, Ownable {
 
     function emergency(address user) external onlyOwner {
         delete banList[user];
+    }
+
+    function report(address from, address reported, bytes memory description) external payable {
+        uint256 BASE_FEE = 0.0001 ether;
+        uint256 realFee = BASE_FEE + (0.000001 ether * reportedCounter[from]);
+
+        require(msg.value >= realFee, "Your fee is too low");
+        reportedQueue.push(Reported(
+            from, reported, description
+        ));
+    }
+
+    function out() external returns (Reported memory) {
+        Reported memory value = reportedQueue[reportedQueue.length - 1];
+        reportedQueue.pop();
+        return value;
     }
 }
