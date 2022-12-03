@@ -82,7 +82,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     // 1. Basic Minting, Burning implementation
     // 2. Basic Transferring implementation
     // 3. Auction implementation
-    function mint(address user, DataTypes.MetaData calldata data) external payable returns(bool) {
+    function mint(DataTypes.MetaData calldata data) external payable returns(bool) {
         // Minting with corresponding initialize fee (0.00001 ether)
         // Just for real network deploying, not development phase
 
@@ -91,6 +91,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         // 이 때 만약 보증금을 제공하는 상황이라면 0.001 이더 이상을 전달해야지 등록이 가능하도록 만들며, 만일 이를 취소했을 경우에는 보증금을 전부 돌려주도록 만듦
         require(governance.popReportingCounter(msg.sender) >= 1 || msg.value >= 0.001 ether, "Need at least 0.001 ether for minting");
 
+        address user = address(msg.sender);
         uint256 tokenID = data.unique_id;           // will revised
         depositPool.addNFTDeposit{value:msg.value}(msg.sender, tokenID, msg.value);
 

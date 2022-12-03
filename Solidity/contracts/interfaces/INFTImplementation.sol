@@ -9,7 +9,7 @@ interface INFTImplementation {
     event Burn(address user, uint256 tokenId);
     event RequestPending(address user, uint256 tokenId);
 
-    function mint(address user, DataTypes.MetaData calldata data) external payable returns(bool);
+    function mint(DataTypes.MetaData calldata data) external payable returns(bool);
     // function burn(address user, uint256 unique_id) external returns(bool);
     function burningByAdmin(uint256 tokenId) external returns (bool);
     function transferOwnership(address user, uint256 token_id) external returns (bool);
