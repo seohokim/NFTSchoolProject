@@ -234,8 +234,13 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
             address ownerOfToken = pending.owner;
             uint256 tokenID = pending.id;
 
+            // console.log(ownerOfToken);
+            // console.log(tokenID);
+
             depositPool.deleteNFTDeposit(ownerOfToken, tokenID);            // 내부에서 해당 유저가 가진 해당 tokenID에 해당하는 deposit을 사용자에게 되돌려줌 (Ether를 기준으로 동작))
             accepted += 1;
+
+            _burn(tokenID);
 
             pending = pdQueueCon.acceptRequest();                           // 큐에 존재하는 다음 요소를 새로 꺼내서 처리
         }

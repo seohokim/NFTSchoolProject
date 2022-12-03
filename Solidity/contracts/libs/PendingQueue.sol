@@ -84,6 +84,9 @@ contract PendingQueue {
                 // 대기 기간이 넘어갔을 경우
                 remove(0);          // 0번째 요소를 삭제함
             }
+            else {
+                pending = DataTypes.PendingMetadata(0, address(0), DataTypes.MetaData(0), 0);
+            }
         }
         else {
             pending = DataTypes.PendingMetadata(0, address(0), DataTypes.MetaData(0), 0);

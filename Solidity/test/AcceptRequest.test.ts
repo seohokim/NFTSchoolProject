@@ -1,6 +1,8 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 
+import { time } from "@nomicfoundation/hardhat-network-helpers";
+
 import { Signer, ContractFactory, Contract } from "ethers";
 
 describe.only("AcceptRequest will return their deposits to each user", function () {
@@ -64,6 +66,26 @@ describe.only("AcceptRequest will return their deposits to each user", function 
             user1.getAddress(), 
             {unique_id: 0x1},
             {value: ethers.utils.parseEther('0.001')});
-        console.log(await ethers.provider.getBalance(DepositPool.address));
+        const DepositPoolBalance = await ethers.provider.getBalance(DepositPool.address);
+
+        expect(DepositPoolBalance).to.equal(ethers.utils.parseEther('0.001'));
+        // Check minted token
+        expect(await NFTImplementation.ownerOf(0x1)).to.equal(await user1.getAddress());
+        const afterMinting = await ethers.provider.getBalance(user1.getAddress());
+        // Call requestBurning()
+        await NFTImplementation.connect(user1).requestBurning(0x1);
+        // Check Pending Queue
+        expect(await PendingQueueInst.findPendingMetadata(0x1)).to.equal(0x0);
+        // Change current block timestamp ( + 10 days)
+        await time.increase(60 * 60 * 24 * 10);
+        // Call acceptRequest()
+        await NFTImplementation.connect(owner).acceptRequest();
+        // Check Pending Queue
+        expect(await PendingQueueInst.findPendingMetadata(0x1)).not.to.equal(0x0);
+        expect(await ethers.provider.getBalance(DepositPool.address)).to.equal(0);
+        const afterBurning = await ethers.provider.getBalance(user1.getAddress());
+
+        expect(afterBurning).greaterThan(afterMinting);
+        await expect(NFTImplementation.ownerOf(0x1)).to.be.revertedWith("ERC721: invalid token ID");
     });
 });
