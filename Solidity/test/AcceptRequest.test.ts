@@ -60,5 +60,10 @@ describe.only("AcceptRequest will return their deposits to each user", function 
     });
 
     it("Deposited liqudity should return to each user", async function () {
+        await NFTImplementation.connect(user1).mint(
+            user1.getAddress(), 
+            {unique_id: 0x1},
+            {value: ethers.utils.parseEther('0.001')});
+        console.log(await ethers.provider.getBalance(DepositPool.address));
     });
 });

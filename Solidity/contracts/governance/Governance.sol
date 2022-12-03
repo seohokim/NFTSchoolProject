@@ -60,6 +60,8 @@ contract Governance is IGovernance, Ownable {
 
     function popReportingCounter(address user) external returns(uint256) {
         uint256 poped = reportedCounter[user];
+        if (poped == 0)
+            return 0;
         reportedCounter[user] = reportedCounter[user] - 1;
 
         return poped;
