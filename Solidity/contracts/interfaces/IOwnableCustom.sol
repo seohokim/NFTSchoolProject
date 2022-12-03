@@ -12,5 +12,5 @@ interface IOwnableCustom {
     function changeOwner(address user) external;
     function addMinter(address minter) external;
     function removeMinter(address minter) external;
-    function getOwner() external view returns(address);
+    // function getOwner() external view returns(address);
 }
