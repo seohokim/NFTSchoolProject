@@ -27,6 +27,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     Counters.Counter public currentTokenID;
     // Whoever can minting over than MAXIMUM_TOKEN_ID value ? (Impossible)
     uint256 public constant MAXIMUM_TOKEN_ID = type(uint256).max;
+    uint256 public constant BURNING_PERIOD = 3 days;
 
     /*
     struct TokenMetadata {
@@ -35,6 +36,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         mapping(uint256 => bool) ids;
     }
     */
+    mapping(uint256 => uint256) public burningPeriod;
     mapping(address => DataTypes.TokenMetadata) public metadata;
 
     // Contract area
@@ -105,6 +107,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         metaData.ids[data.unique_id] = true;
         metaData.stored.push(data);
 
+        burningPeriod[data.unique_id] = block.timestamp + BURNING_PERIOD;
         _mint(user, data.unique_id);                // Afterwards, should change to Counter (auto increments)
         emit Mint(user, data.unique_id);
 
@@ -146,6 +149,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         DataTypes.TokenMetadata storage metaData = metadata[msg.sender];
         uint256 tokenIndex = _findTokenID(metaData, token_id);
 
+        require(burningPeriod[token_id] <= block.timestamp, "You can't burn this token now");
         require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID issue");
         require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
 
@@ -167,6 +171,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         metaData.stored[tokenIndex] = metaData.stored[metaData.stored.length - 1];
         metaData.stored.pop();
 
+        delete burningPeriod[token_id];
         emit RequestPending(msg.sender, token_id);
 
         return true;
@@ -244,6 +249,8 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
             _burn(tokenID);
 
             pending = pdQueueCon.acceptRequest();                           // 큐에 존재하는 다음 요소를 새로 꺼내서 처리
+            
+            emit Burned(ownerOfToken, tokenID, block.timestamp);
         }
         return accepted;
     }

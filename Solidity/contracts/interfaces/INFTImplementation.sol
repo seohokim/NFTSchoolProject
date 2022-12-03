@@ -8,6 +8,7 @@ interface INFTImplementation {
     event Mint(address user, uint256 tokenId);
     event Burn(address user, uint256 tokenId);
     event RequestPending(address user, uint256 tokenId);
+    event Burned(address owner, uint256 tokenID, uint256 timestamp);
 
     function mint(DataTypes.MetaData calldata data) external payable returns(bool);
     // function burn(address user, uint256 unique_id) external returns(bool);
