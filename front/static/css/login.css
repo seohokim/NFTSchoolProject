@@ -1,0 +1,123 @@
+
+.logo1 {
+  /* 타원 1 */
+position: absolute;
+width: 83.78px;
+height: 80.91px;
+top: 28.09px;
+left: 29.38px;
+border-radius:50%;
+background: rgb(255, 8, 196);
+}
+
+.logo2 {
+/* 타원 1 */
+position: absolute;
+width: 83.78px;
+height: 80.91px;
+top: 20px;
+left: 21px;
+border-radius:50%;
+background: rgb(8, 255, 255);
+}
+
+.logoWord {
+  /* SAA */
+position: absolute;
+width: 83.78px;
+height: 33.17px;
+top: 48.89px;
+left: 36.22px;
+
+
+color: rgb(255, 255, 255);
+font-family: Ubuntu;
+font-size: 30px;
+font-weight: 700;
+line-height: 34px;
+letter-spacing: 0px;
+text-align: left;
+
+
+}
+.loginPhrase {
+  /* Hello, we are SAA. Your patent can be easily, securely recorded and recalled anywhere. A new paradigm that you can't see anywhere else, our SAA will make it. */
+position: absolute;
+width: 1229px;
+height: 252px;
+top: 203px;
+left: 283px;
+
+text-decoration: none;
+color: rgb(11, 10, 10);
+font-family: Ubuntu;
+font-size: 30px;
+font-weight: 700;
+line-height: 34px;
+letter-spacing: 0px;
+text-align: left;
+}
+
+.metaMask {
+  /* MetaMask_Fox.svg */
+position: absolute;
+width: 51px;
+height: 61px;
+top: 753px;
+left: 823px;
+}
+
+.loginBar{
+  /* 직사각형 1 */
+position: absolute;
+width: 970px;
+height: 76px;
+top: 746px;
+left: 475px;
+
+
+background: rgb(255, 255, 255);
+box-shadow: 0px 4px 20px rgba(62, 148, 201, 0.63);;
+border-radius: 10px;
+}
+
+.walletPhrase {
+  /* Connect your wallet */
+position: absolute;
+width: 496px;
+height: 40px;
+top: 764px;
+left: 782px;
+
+
+color: rgb(11, 10, 10);
+font-family: Ubuntu;
+font-size: 30px;
+font-weight: 700;
+line-height: 34px;
+letter-spacing: 0px;
+text-align: center;
+}
+
+.recycle{
+  position: absolute;
+width: 550px;
+height: 81px;
+top: 800px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 64px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}

@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;700&display=swap');
+a {
+  text-decoration-line: none;
+  text-align: center;
+  color: inherit
+}
+
+.upperbox{
+    /* Rectangle 2 */
+    position: absolute;
+    width: 100%;
+    height: 250px;
+    top: 0;
+    left: 0;
+
+    /* Primary / Voog Blue */
+    background: rgb(68, 61, 246);
+
+}
+
+.logo{
+    /* saa */
+  position: absolute;
+  width: 50px;
+  height: 25px;
+  top: 2vh;
+  left: 2vw;
+  
+  
+  color: rgba(141, 144, 145, 0.7);
+  font-family: Ubuntu;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 4.4vh;
+  letter-spacing: 0px;
+  text-align: center;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.search{
+  /* Search components */
+position: absolute;
+width: 350px;
+height: 30px;
+top: 2vh;
+left: 100px;
+
+
+color: rgb(255, 255, 255);
+font-family: Ubuntu;
+font-size: 16px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+.link{
+  /* voog.com */
+  position: absolute;
+  width: 9vw;
+  height: 1.7vh;
+  top: 2vh;
+  left: 90vw;
+  
+  
+  color: rgb(141, 144, 145);
+  font-family: Ubuntu;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 1.7vw;
+  letter-spacing: 0px;
+  text-align: right;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.phrase{
+  /* Search components */
+position: absolute;
+width: 350px;
+height: 25px;
+top: 125px;
+left: 100px;
+
+
+color: rgb(255, 255, 255);
+font-family: Ubuntu;
+font-size: 25px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#papp{
+  /* Patent Application */
+position: absolute;
+width: 300px;
+height: 24px;
+top: 350px;
+left: 50px;
+
+
+color: rgb(50, 126, 195);
+font-family: Ubuntu;
+font-size: 24px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#regi{
+  /* Registering */
+position: absolute;
+width: 200px;
+height: 22px;
+top: 400px;
+left: 50px;
+
+
+color: rgb(141, 144, 145);
+font-family: Ubuntu;
+font-size: 18px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#canc{
+  /* Layout & Grid */
+position: absolute;
+width: 200px;
+height: 24px;
+top: 440px;
+left: 50px;
+
+
+color: rgb(141, 144, 145);
+font-family: Ubuntu;
+font-size: 18px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#pman{
+  position: absolute;
+  width: 250px;
+  height: 24px;
+  top: 510px;
+  left: 50px;
+  
+  
+  color: rgb(0, 0, 0);
+  font-family: Ubuntu;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 63px;
+  letter-spacing: 0px;
+  text-align: left;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#dash{
+  /* Dashboard */
+  position: absolute;
+  width: 200px;
+  height: 24px;
+  top: 560px;
+  left: 50px;
+  
+  
+  color: rgb(141, 144, 145);
+  font-family: Ubuntu;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 63px;
+  letter-spacing: 0px;
+  text-align: left;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#recy{
+ /* Recycle */
+ position: absolute;
+ width: 200px;
+ height: 24px;
+ top: 600px;
+ left: 50px;
+ 
+ 
+ color: rgb(141, 144, 145);
+ font-family: Ubuntu;
+ font-size: 18px;
+ font-weight: 400;
+ line-height: 63px;
+ letter-spacing: 0px;
+ text-align: left;
+ 
+ 
+ 
+ display: flex;
+ flex-direction: row;
+ align-items: center;
+}
+
+#auct{
+  /* Icons & Illustrations */
+position: absolute;
+width: 200px;
+height: 24px;
+top: 670px;
+left: 50px;
+
+
+color: rgb(0, 0, 0);
+font-family: Ubuntu;
+font-size: 22px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#buyi{
+  /* Icons */
+position: absolute;
+width:200px;
+height: 24px;
+top: 720px;
+left: 50px;
+
+
+color: rgb(141, 144, 145);
+font-family: Ubuntu;
+font-size: 18px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#sell{
+  /* Illustrations */
+position: absolute;
+width: 200px;
+height: 24px;
+top: 760px;
+left: 50px;
+
+
+color: rgb(141, 144, 145);
+font-family: Ubuntu;
+font-size: 18px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#sett{
+  /* Settings */
+position: absolute;
+width: 200px;
+height: 24px;
+top: 830px;
+left: 50px;
+
+
+color: rgb(0, 0, 0);
+font-family: Ubuntu;
+font-size: 22px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+.menu {
+  /* Registration */
+position: absolute;
+width: 478px;
+height: 81px;
+top: 300px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 64px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+#recycle{
+  position: absolute;
+width: 550px;
+height: 81px;
+top: 800px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 64px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
