@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <title>
+        walletPopup
+    </title>
+  <head>
+    <link rel = "stylesheet", href="{{ url_for ('static', filename='css/walletPopup.css') }} "> 
+  </head>
+
+  <body class="dimmed">
+    <div class="popup">
+
+      <div class = "metaMask">
+      <a href = {{ url_for( 'home' )}} >
+      <img src="../static/img/MetaMask_Fox.svg" >
+      </a>
+      </div>
+
+      <div class="plot1">Click this icon in the upper right corner of<br>your Chrome browser</div>
+      <div class="plot2">
+          If you don't have a Metamask wallet,<br>
+          you can create one<br>
+          Learn more:
+          <div id = "link">
+            <a href = "https://metamask.io">
+            metamask.io
+            </a>
+          </div>
+      </div>
+      <div class="cmd">
+        <a href = {{ url_for( 'home' )}}>
+          <input type="button" name="btnclose" class="button" value="닫기">
+        </a>
+      </div>
+  </div>
+</body>
+</html>

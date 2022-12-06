@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>welcome</title>
+  <link rel = "stylesheet", href="{{ url_for('static', filename='css/home.css')}}">
+  <style>
+    body { background-color: rgb(27, 33, 36);}
+  </style>
+
+
+  <div class = "logo">saa</div>
+  <div class = "link">
+    <a href = {{ url_for( 'home' ) }}>saa.com</a>
+  </div>
+</head>
+
+<body>
+  <div class = "phrase">
+  <h2>Safely,<br> Anywhere,<br>Anytime</h2>
+  </div>
+
+  <div class = "loginbar">
+    <div id = "box"></div>
+    <div id = "shape">
+      <img src="../static/img/dotbogi.png" >
+    </div>
+    <div id = "search"></div>
+      <form>
+        <input type="text" id="search" size="50" placeholder = "Search components">
+      </form>
+    </div>
+  </div>
+
+  <div class = "CW">
+    <a href = {{ url_for( 'walletPopup' )}}>Connect wallet</a>
+  </div>
+
+  <div class = "PA">
+    <a href = {{ url_for( 'patentApp' )}}>Patent Application</a>
+  </div>
+  
+  <div class = "PM">
+    <a href = {{ url_for( 'patentManagement' )}}>Patents Management</a>
+  </div>
+
+  
+  <div class = "AU">
+    <a href = {{ url_for( 'auction' )}}>Auction</a>
+  </div>
+  
+  <div class = "SET">
+    <a href = {{ url_for( 'setting' )}}>Setting</a>
+  </div>
+  
+</body>
+</html>

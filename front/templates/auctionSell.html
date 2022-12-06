@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>auction Sell</title>
+  <link rel = "stylesheet", href="{{ url_for('static', filename='css/auctionSell.css')}}">
+  <div class = upperbox></div>
+
+  <div class = "logo">saa</div>
+  <div class = "search">
+    <form>
+      <input type = "text" id="search" size ="50" placeholder="Search Components">
+    </form>
+  </div>
+
+  <div class = "link">
+    <a href = {{ url_for( 'home' ) }}>saa.com</a>
+  </div>
+
+  <div class = "phrase">
+    <h1>Auction</h1>
+  </div>
+</head>
+
+<body>
+  <aside>
+    <div class = "side">
+      <ul>
+        <div id = "papp">
+        <a href = {{ url_for( 'patentApp' )}}><h3>Patent Application</h3></a>
+        </div>
+        <div id = "regi">Registration</div>
+        <div id = "canc">Cancel Application</div>
+
+        <div id = "pman">
+        <a href = {{ url_for( 'patentManagement' )}}><h3>Patent Management</h3></a>
+        </div>
+        <div id = "dash">dashboard</div>
+        <div id = "recy">Recycle Bin</div>
+        
+        <div id = "auct">
+        <a href = {{ url_for( 'auction' )}}><h3>Auction</h3></a>
+        </div>
+        <div id = "buyi">Buying/Searching</div>
+        <div id = "sell">selling</div>
+
+        <div id = "sett">
+        <a href = {{ url_for( 'setting' )}}><h3>setting</h3></a>
+        </div>
+    </div>
+  </aside>
+  
+  <div class = "menu"> Sale Registration</div>
+</body>
+</html>
