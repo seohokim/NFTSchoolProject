@@ -22,6 +22,10 @@ def walletPopup():
 def patentApp():
     return render_template("patentApp.html")
 
+@app.route('/home/patentApp/registerPopup')
+def registerPopup():
+    return render_template("registerPopup.html")
+
 @app.route('/home/patentApp/cancelPopup')
 def cancelPopup():
     return render_template("cancelPopup.html")
@@ -31,8 +35,10 @@ def patentManagement():
     return render_template("patentManagement.html")
     
 @app.route('/home/patentManagement/PatentManView')
-def PatentManView():
-    return render_template("PatentManView.html")
+def patentManView():
+    return render_template("patentManView.html")
+
+    
 
 @app.route('/home/auction')
 def auction():
@@ -46,23 +52,50 @@ def auctionSell():
 def auctionView():
     return render_template("auctionView.html")
 
-@app.route('/home/setting')
-def setting():
-    return render_template("setting.html")
+@app.route('/home/auction/auctionView/buyNowPopup')
+def buyNowPopup():
+    return render_template("buyNowPopup.html")
+
+
 
 @app.route('/adminHome')
 def adminHome():
     return render_template("adminHome.html")
 
-@app.route('/adminHome/adminExamination')
+@app.route('/adminHome/banPopup')
+def banPopup():
+    return render_template("banPopup.html")
+
+@app.route('/adminHome/banPopup/notBannedPopup')
+def notBannedPopup():
+    return render_template("notBannedPopup.html")
+
+@app.route('/adminHome/unbanPopup')
+def unbanPopup():
+    return render_template("unbanPopup.html")
+
+@app.route('/adminHome/unbanPopup/notUnbannedPopup')
+def notUnbannedPopup():
+    return render_template("notUnbannedPopup.html")
+
+
+
+@app.route('/adminHome/burningPopup')
+def burningPopup():
+    return render_template("burningPopup.html")
+
+@app.route('/adminHome/burningPopup/notBurnedPopup')
+def notBurnedPopupp():
+    return render_template("notBurnedPopup.html")
+
+@app.route('/adminExamination')
 def adminExamination():
     return render_template("adminExamination.html")
 
-@app.route('/adminHome/adminExamView')
+@app.route('/adminExamination/adminExamView')
 def adminExamView():
     return render_template("adminExamView.html")
     
-
 
 if __name__ == '__main__':
     app.run(debug=True)
