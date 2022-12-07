@@ -8,7 +8,7 @@ a {
 .upperbox{
     /* Rectangle 2 */
     position: absolute;
-    width: 100%;
+    width: 1920px;
     height: 250px;
     top: 0;
     left: 0;
@@ -66,29 +66,7 @@ flex-direction: row;
 align-items: center;
 }
 
-.link{
-  /* voog.com */
-  position: absolute;
-  width: 9vw;
-  height: 1.7vh;
-  top: 2vh;
-  left: 90vw;
-  
-  
-  color: rgb(141, 144, 145);
-  font-family: Ubuntu;
-  font-size: 30px;
-  font-weight: 400;
-  line-height: 1.7vw;
-  letter-spacing: 0px;
-  text-align: right;
-  
-  
-  
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+
 
 .phrase{
   /* Search components */
@@ -123,7 +101,7 @@ top: 350px;
 left: 50px;
 
 
-color: rgb(50, 126, 195);
+color: rgb(0, 0, 0);
 font-family: Ubuntu;
 font-size: 24px;
 font-weight: 400;
@@ -188,7 +166,7 @@ align-items: center;
 
 #pman{
   position: absolute;
-  width: 250px;
+  width: 300px;
   height: 24px;
   top: 510px;
   left: 50px;
@@ -266,7 +244,7 @@ top: 670px;
 left: 50px;
 
 
-color: rgb(0, 0, 0);
+color: rgb(50, 126, 196);
 font-family: Ubuntu;
 font-size: 22px;
 font-weight: 400;
@@ -376,3 +354,82 @@ display: flex;
 flex-direction: row;
 align-items: center;
 }
+
+#title{
+  /* Title : "title" */
+  position: absolute;
+  width: 800px;
+  height: 20px;
+  top: 400px;
+  left: 400px;
+  
+  
+  color: rgb(27, 33, 36);
+  font-family: Ubuntu;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 47px;
+  letter-spacing: 0px;
+  text-align: left;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  }
+  
+  #field{
+  /* Feild */
+  position: absolute;
+  width: 800px;
+  height: 20px;
+  top: 440px;
+  left: 400px;
+  
+  
+  color: rgb(27, 33, 36);
+  font-family: Ubuntu;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 47px;
+  letter-spacing: 0px;
+  text-align: left;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  }
+
+.result{
+position: absolute;
+width: 550px;
+height: 81px;
+top: 500px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 64px;
+font-weight: 400;
+line-height: 63px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+  }
+
+.resultTable{
+position: absolute;
+width: 1000px;
+height: 80px;
+top: 600px;
+left: 400px;
+  }

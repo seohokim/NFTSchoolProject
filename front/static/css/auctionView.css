@@ -66,29 +66,7 @@ flex-direction: row;
 align-items: center;
 }
 
-.link{
-  /* voog.com */
-  position: absolute;
-  width: 9vw;
-  height: 1.7vh;
-  top: 2vh;
-  left: 90vw;
-  
-  
-  color: rgb(141, 144, 145);
-  font-family: Ubuntu;
-  font-size: 30px;
-  font-weight: 400;
-  line-height: 1.7vw;
-  letter-spacing: 0px;
-  text-align: right;
-  
-  
-  
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+
 
 .phrase{
   /* Search components */
@@ -123,7 +101,7 @@ top: 350px;
 left: 50px;
 
 
-color: rgb(50, 126, 195);
+color: rgb(0, 0, 0);
 font-family: Ubuntu;
 font-size: 24px;
 font-weight: 400;
@@ -188,7 +166,7 @@ align-items: center;
 
 #pman{
   position: absolute;
-  width: 250px;
+  width: 300px;
   height: 24px;
   top: 510px;
   left: 50px;
@@ -266,7 +244,7 @@ top: 670px;
 left: 50px;
 
 
-color: rgb(0, 0, 0);
+color: rgb(50, 126, 195);
 font-family: Ubuntu;
 font-size: 22px;
 font-weight: 400;
@@ -375,4 +353,267 @@ text-align: left;
 display: flex;
 flex-direction: row;
 align-items: center;
+}
+
+.title{
+  /* Title : "title" */
+  position: absolute;
+  width: 668.25px;
+  height: 60.78px;
+  top: 390px;
+  left: 400px;
+  
+  
+  color: rgb(27, 33, 36);
+  font-family: Ubuntu;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 47px;
+  letter-spacing: 0px;
+  text-align: left;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+  
+.field{
+/* Feild */
+position: absolute;
+width: 120px;
+height: 18px;
+top: 460px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 20px;
+font-weight: 400;
+line-height: 47px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+.applicant{
+  /* Feild */
+  position: absolute;
+  width: 200px;
+  height: 20px;
+  top: 460px;
+  left: 900px;
+  
+  
+  color: rgb(27, 33, 36);
+  font-family: Ubuntu;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 47px;
+  letter-spacing: 0px;
+  text-align: left;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  }
+    
+.currentPrice{
+/* Rectangle 2 */
+position: absolute;
+width: 150px;
+height: 40px;
+top: 490px;
+left: 400px;
+
+
+color: rgb(0, 0, 0);
+font-family: Ubuntu;
+font-size : 15px;
+font-weight: 400;
+line-height: 47px;
+letter-spacing: 0px;
+text-align: center;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content : center;
+box-sizing: border-box;
+
+background: rgba(255, 255, 255, 0);
+border: 0.75px solid rgba(0, 0, 0, 0.25);
+border-radius: 3.75px;
+}
+
+.salePrice{
+  position: absolute;
+  width: 150px;
+  height: 40px;
+  top: 490px;
+  left: 900px;
+  
+  
+  color: rgb(0, 0, 0);
+  font-family: Ubuntu;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 47px;
+  letter-spacing: 0px;
+  text-align: center;
+  
+  
+  
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content : center;
+  box-sizing: border-box;
+  
+  background: rgba(255, 255, 255, 0);
+  border: 0.75px solid rgba(0, 0, 0, 0.25);
+  border-radius: 3.75px;
+}
+
+
+.desc{
+/* Action / Typing */
+position: absolute;
+width: 700px;
+height: 300px;
+top: 540px;
+left: 400px;
+box-sizing: border-box;
+
+
+background: rgba(255, 255, 255, 0);
+border: 0.75px solid rgba(0, 0, 0, 0.25);
+border-radius: 3.75px;
+}
+
+.remainTime{
+  /* Applicant */
+position: absolute;
+width: 300px;
+height: 12px;
+top: 840px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 12px;
+font-weight: 400;
+line-height: 47px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+.date{
+  /* Applicant */
+position: absolute;
+width: 300px;
+height: 8px;
+top: 1100px;
+left: 400px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 12px;
+font-weight: 400;
+line-height: 47px;
+letter-spacing: 0px;
+text-align: left;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+}
+
+.image{
+  /* Action / Typing */
+  position: absolute;
+  width: 400px;
+  height: 300px;
+  top: 540px;
+  left: 1120px;
+  box-sizing: border-box;
+  
+  
+  background: rgba(255, 255, 255, 0);
+  border: 0.75px solid rgba(0, 0, 0, 0.25);
+  border-radius: 3.75px;
+  }
+
+.download{
+    /* Download */
+position: absolute;
+width: 80.25px;
+height: 30.01px;
+top: 845px;
+left: 1280px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 12px;
+font-weight: 400;
+line-height: 47px;
+letter-spacing: 0px;
+text-align: center;
+
+
+
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content : center;
+}
+
+.buyButton{
+  position: absolute;
+width: 120px;
+height: 40px;
+top: 950px;
+left: 900px;
+
+
+color: rgb(27, 33, 36);
+font-family: Ubuntu;
+font-size: 18px;
+font-weight: 400;
+line-height: 47px;
+letter-spacing: 0px;
+text-align: center;
+box-sizing: border-box;
+
+
+background: rgba(255, 255, 255, 0);
+border: 0.75px solid rgba(0, 0, 0, 0.25);
+border-radius: 3.75px;
+
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content : center;
 }

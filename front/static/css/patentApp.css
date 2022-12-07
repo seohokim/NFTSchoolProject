@@ -8,7 +8,7 @@ a {
 .upperbox{
     /* Rectangle 2 */
     position: absolute;
-    width: 100%;
+    width: 1920px;
     height: 250px;
     top: 0;
     left: 0;
@@ -66,29 +66,7 @@ flex-direction: row;
 align-items: center;
 }
 
-.link{
-  /* voog.com */
-  position: absolute;
-  width: 9vw;
-  height: 1.7vh;
-  top: 2vh;
-  left: 90vw;
-  
-  
-  color: rgb(141, 144, 145);
-  font-family: Ubuntu;
-  font-size: 30px;
-  font-weight: 400;
-  line-height: 1.7vw;
-  letter-spacing: 0px;
-  text-align: right;
-  
-  
-  
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
+
 
 .phrase{
   /* Search components */
@@ -188,7 +166,7 @@ align-items: center;
 
 #pman{
   position: absolute;
-  width: 250px;
+  width: 300px;
   height: 24px;
   top: 510px;
   left: 50px;
@@ -394,8 +372,6 @@ line-height: 63px;
 letter-spacing: 0px;
 text-align: left;
 
-
-
 display: flex;
 flex-direction: row;
 align-items: center;
@@ -410,7 +386,6 @@ top: 410px;
 left: 800px;
 box-sizing: border-box;
 
-
 color: rgba(141, 144, 145, 0.7);
 font-family: Ubuntu;
 font-size: 16px;
@@ -418,7 +393,6 @@ font-weight: 400;
 line-height: 63px;
 letter-spacing: 0px;
 text-align: left;
-
 
 display: flex;
 flex-direction: row;
@@ -433,7 +407,6 @@ height: 40px;
 top: 450px;
 left: 400px;
 box-sizing: border-box;
-
 
 background: rgba(255, 255, 255, 0);
 border: 1px solid rgba(0, 0, 0, 0.25);
@@ -464,6 +437,14 @@ flex-direction: row;
 align-items: center;
 }
 
+.register{
+  position: absolute;
+  width: 120px;
+  height: 20px;
+  top: 670px;
+  left: 1100px;
+  
+}
 
 #myImg1{
   /* 직사각형 1 */
@@ -566,7 +547,7 @@ align-items: center;
 .square{
   /* 프레임 5 */
 position: absolute;
-width: 770px;
+width: 1400px;
 height: 280px;
 top: 910px;
 left: 400px;
