@@ -1,23 +1,21 @@
-<!DOCTYPE html>
 <html>
     <title>
       cancel Popup
     </title>
   <head>
-    <link rel = "stylesheet", href="{{ url_for ('static', filename='css/cancelPopup.css') }} "> 
+    <link rel = "stylesheet", href="{{ url_for ('static', filename='css/burningPopup.css') }} "> 
   </head>
 
   <body class="dimmed">
     <div class="popup">
-      <div class="plot1">Are you sure?</div>
-      <div class="plot2">You can not take it back</div>
+      <div class="plot1">Token's name : "title"<br>Is this right?</div>
       <div class ="yes">
-        <a href = {{ url_for( 'patentApp' )}}>
+        <a href = {{ url_for( 'adminHome' )}}>
           <input type="button" name="yes" class="button" value="yes">
         </a>
       </div>
       <div class ="no">
-        <a href = {{ url_for( 'patentApp' )}}>
+        <a href = {{ url_for( 'adminHome' )}}>
           <input type="button" name="no" class="button" value="no">
         </a>
       </div>

@@ -5,16 +5,13 @@
   <link rel = "stylesheet", href="{{ url_for('static', filename='css/patentManView.css')}}">
   <div class = upperbox></div>
 
-  <div class = "logo">saa</div>
+  <div class = "logo"> <a href = {{ url_for( 'home' ) }}>saa</a></div>
   <div class = "search">
     <form>
       <input type = "text" id="search" size ="50" placeholder="Search Components">
     </form>
   </div>
 
-  <div class = "link">
-    <a href = {{ url_for( 'home' ) }}>saa.com</a>
-  </div>
 
   <div class = "phrase">
     <h1>Patent<br>Management</h1>
@@ -43,12 +40,26 @@
         <div id = "buyi">Buying/Searching</div>
         <div id = "sell">selling</div>
 
-        <div id = "sett">
-        <a href = {{ url_for( 'setting' )}}><h3>setting</h3></a>
-        </div>
     </div>
   </aside>
   
   <div class = "menu"> View Patent</div>
+  
+  <div class = "title">Title = "title"</div>
+  <div class = "field">Field = "field"</div>
+
+  <div class = "desc">Descriptions</div>
+  <div class = "date">Patent Application date : year/month/day</div>
+
+  <div class = "image">Image</div>
+  <div class = "download">Download</div>
+
+  <div class = "sell">
+    <a href = {{ url_for( 'auctionSell' )}}>Sell</a>
+  </div>
+  <div class = "back">
+    <a href = {{ url_for( 'auction' )}}>Back</a>
+  </div>
+
 </body>
 </html>

@@ -5,16 +5,13 @@
   <link rel = "stylesheet", href="{{ url_for('static', filename='css/patentManagement.css')}}">
   <div class = upperbox></div>
 
-  <div class = "logo">saa</div>
+  <div class = "logo"> <a href = {{ url_for( 'home' ) }}>saa</a></div>
   <div class = "search">
     <form>
       <input type = "text" id="search" size ="50" placeholder="Search Components">
     </form>
   </div>
 
-  <div class = "link">
-    <a href = {{ url_for( 'home' ) }}>saa.com</a>
-  </div>
 
   <div class = "phrase">
     <h1>Patent<br>Management</h1>
@@ -43,9 +40,6 @@
         <div id = "buyi">Buying/Searching</div>
         <div id = "sell">selling</div>
 
-        <div id = "sett">
-        <a href = {{ url_for( 'setting' )}}><h3>setting</h3></a>
-        </div>
     </div>
   </aside>
   
@@ -53,9 +47,13 @@
   <div class = "myPatent1">
     <div id = "myImg1"></div>
     <div id = "text1">Image</div>
-    <div id = "mytitle1"></div>
-    <div id = "sell1"></div>
-    <div id = "view1"></div>
+    <div id = "myTitle1">Title</div>
+    <div id = "sell1">
+      <a href = {{ url_for ( 'auctionSell' )}}>sell</a>
+    </div>
+    <div id = "view1">
+      <a href = {{ url_for ( 'patentManView' )}}>view</a>
+    </div>
   </div>
 
   <div class = "myPatent2">
@@ -65,7 +63,15 @@
     <div id = "view2"></div>
   </div>
 
-  <div id = "recycle"> Recycle Bin</div>
 
+  <div id = "recycle"> Recycle Bin</div>
+  <div class = "square"></div>
+
+  <div class = "patentInBin1">
+  <div id = "binImg1"></div>
+  <div id = "binText1"></div>
+  <div id = "recover1"><a href = {{ url_for ( 'patentManagement' )}}>recover</a></div>
+  <div id = "time1">7day left</div>
+  </div>
 </body>
 </html>

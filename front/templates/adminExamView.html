@@ -5,50 +5,60 @@
   <link rel = "stylesheet", href="{{ url_for('static', filename='css/adminExamView.css')}}">
   <div class = upperbox></div>
 
-  <div class = "logo">saa</div>
+  <div class = "logo">
+    <a href = {{ url_for( 'home' ) }}>saa</a>
+  </div>
   <div class = "search">
     <form>
       <input type = "text" id="search" size ="50" placeholder="Search Components">
     </form>
   </div>
-
-  <div class = "link">
-    <a href = {{ url_for( 'home' ) }}>saa.com</a>
-  </div>
-
   <div class = "phrase">
     <h1>Examination</h1>
   </div>
 </head>
 
 <body>
+
   <aside>
     <div class = "side">
       <ul>
-        <div id = "papp">
-        <a href = {{ url_for( 'patentApp' )}}><h3>Patent Application</h3></a>
+        <div id = "adminHome">
+        <a href = {{ url_for( 'adminHome' )}}><h3>AdminHome</h3></a>
         </div>
-        <div id = "regi">Registration</div>
-        <div id = "canc">Cancel Application</div>
-
-        <div id = "pman">
-        <a href = {{ url_for( 'patentManagement' )}}><h3>Patent Management</h3></a>
-        </div>
-        <div id = "dash">dashboard</div>
-        <div id = "recy">Recycle Bin</div>
-        
-        <div id = "auct">
-        <a href = {{ url_for( 'auction' )}}><h3>Auction</h3></a>
-        </div>
-        <div id = "buyi">Buying/Searching</div>
-        <div id = "sell">selling</div>
-
-        <div id = "sett">
-        <a href = {{ url_for( 'setting' )}}><h3>setting</h3></a>
-        </div>
-    </div>
-  </aside>
-  
+        <div id = "adminExamination">
+          <a href = {{ url_for( 'adminExamination' )}}><h3>Examination</h3></a>
+          </div>
+      </ul>
+      </div>
+      </aside>
+      
   <div class = "menu"> View Patent</div>
+  <div class = "status"> Status : "status"(waiting for exam, approved,denied)</div>
+  
+  <div class = "title">Title = "title"</div>
+  <div class = "field">Field = "field"</div>
+  <div class = "applicant">Application : "name"</div>
+
+  <div class = "desc">Descriptions</div>
+
+  <div class = "image">Image</div>
+  <div class = "download">Download</div>
+
+  <div class = "date">Patent Application date : year/month/day</div>
+  <div class = "approveDate">Approved date: (not approved or year/month/day)</div>
+
+  <div class = "deny">
+    <a href = {{ url_for( 'adminExamination' )}}>Deny</a>
+  </div>
+
+  <div class = "approve">
+    <a href = {{ url_for( 'adminExamination' )}}>Approve</a>
+  </div>
+
+  <div class = "back">
+    <a href = {{ url_for( 'adminExamination' )}}>Back</a>
+  </div>
+
 </body>
 </html>

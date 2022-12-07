@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <title>
+      register Popup
+    </title>
+  <head>
+    <link rel = "stylesheet", href="{{ url_for ('static', filename='css/registerPopup.css') }} "> 
+  </head>
+
+  <body class="dimmed">
+    <div class="popup">
+      <div class="plot1">There are registered patents on your<br>account!</div>
+      <div class="plot2">The register fee goes up!</div>
+      <div class ="register">
+        <a href = {{ url_for( 'patentApp' )}}>
+          <input type="button" name="register" class="button" value="register">
+        </a>
+      </div>
+      <div class ="cancel">
+        <a href = {{ url_for( 'patentApp' )}}>
+          <input type="button" name="cancel" class="button" value="cancel">
+        </a>
+      </div>
+  </div>
+</body>
+</html>

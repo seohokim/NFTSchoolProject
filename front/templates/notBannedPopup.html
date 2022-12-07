@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <title>
+      cancel Popup
+    </title>
+  <head>
+    <link rel = "stylesheet", href="{{ url_for ('static', filename='css/notBannedPopup.css') }} "> 
+  </head>
+
+  <body class="dimmed">
+    <div class="popup">
+      <div class="plot1">This account has already been banned or does not exist.</div>
+      <div class ="ok">
+        <a href = {{ url_for( 'adminHome' )}}>
+          <input type="button" name="ok" class="button" value="ok">
+        </a>
+      </div>
+
+  </div>
+</body>
+</html>

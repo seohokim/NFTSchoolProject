@@ -5,15 +5,11 @@
   <link rel = "stylesheet", href="{{ url_for('static', filename='css/auctionSell.css')}}">
   <div class = upperbox></div>
 
-  <div class = "logo">saa</div>
+  <div class = "logo"> <a href = {{ url_for( 'home' ) }}>saa</a></div>
   <div class = "search">
     <form>
       <input type = "text" id="search" size ="50" placeholder="Search Components">
     </form>
-  </div>
-
-  <div class = "link">
-    <a href = {{ url_for( 'home' ) }}>saa.com</a>
   </div>
 
   <div class = "phrase">
@@ -43,12 +39,31 @@
         <div id = "buyi">Buying/Searching</div>
         <div id = "sell">selling</div>
 
-        <div id = "sett">
-        <a href = {{ url_for( 'setting' )}}><h3>setting</h3></a>
-        </div>
     </div>
   </aside>
+
+  <div class = "menu"> View Patent</div>
   
-  <div class = "menu"> Sale Registration</div>
+  <div class = "title">Title = "title"</div>
+  <div class = "field">Field = "field"</div>
+  <div class = "applicant">applicant : "name"</div>
+
+  <div class = "desc">Descriptions..</div>
+
+  <form>
+    <input type = "text" id="minPrice" size ="50" placeholder="Minimum price.. (Ether)">
+  </form>
+  <form>
+    <input type = "text" id="salePrice" size ="50" placeholder="sale price.. (Ether)">
+  </form>
+
+  
+
+  <div class = "register">
+    <a href = {{ url_for( 'auctionSell' )}}>register</a>
+  </div>
+  <div class = "back">
+    <a href = {{ url_for( 'patentManagement' )}}>Back</a>
+  </div>
 </body>
 </html>

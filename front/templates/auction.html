@@ -3,18 +3,30 @@
 <head>
   <title>Auction</title>
   <link rel = "stylesheet", href="{{ url_for('static', filename='css/auction.css')}}">
+
+  <style>
+    table, th, td {
+      border: 1px solid #bcbcbc;
+    }
+    table {
+      width: 600px;
+      height: 200px;
+    }
+    th {
+      width: 300px;
+      height: 200px;
+    }
+  </style>
+
   <div class = upperbox></div>
 
-  <div class = "logo">saa</div>
+  <div class = "logo"> <a href = {{ url_for( 'home' ) }}>saa</a></div>
   <div class = "search">
     <form>
       <input type = "text" id="search" size ="50" placeholder="Search Components">
     </form>
   </div>
 
-  <div class = "link">
-    <a href = {{ url_for( 'home' ) }}>saa.com</a>
-  </div>
 
   <div class = "phrase">
     <h1>Auction</h1>
@@ -42,13 +54,37 @@
         </div>
         <div id = "buyi">Buying/Searching</div>
         <div id = "sell">selling</div>
-
-        <div id = "sett">
-        <a href = {{ url_for( 'setting' )}}><h3>setting</h3></a>
-        </div>
     </div>
   </aside>
   
   <div class = "menu"> Search Patents</div>
+    <form>
+      <input type = "text" id="title" size ="50" placeholder="Your patent's title">
+    </form>
+    <form>
+      <input type = "text" id="field" size ="50" placeholder="Your patent's field">
+    </form>
+
+  <div class = "result">Result..</div>
+
+  <table class = "resultTable">
+    <tr class = "imageLine1">
+        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+    </tr>
+
+    <tr>
+      <td>Title</td>
+      <td>Title</td>
+      <td>Title</td>
+      <td>Title</td>
+      <td>Title</td>
+      <td>Title</td>
+    </tr>
+  </table>
 </body>
 </html>
