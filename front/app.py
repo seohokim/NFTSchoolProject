@@ -1,5 +1,5 @@
 import sys, os, json
-from flask import Flask, request, render_template, redirect, url_for, abort, session
+from flask import Flask, request, render_template, redirect, url_for, abort, session, render_template_string
 
 import pickle
 from functools import wraps
@@ -184,6 +184,30 @@ def handle_mint():
             'unique_id': int(request.form.get('field'))
         }
         EthereumLib.call_function(NFTImplementation, 'mint', parameters, values)
+    else:
+        return abort(403)
+    return redirect(url_for('patentApp'))
+
+# 지금은 GET을 허용함, 디버깅 용도로 사용할 예정이라서
+# 이후에 Cancel 페이지가 수정되고 나면 업데이트 예정
+
+
+@app.route('/api/burn', methods=['GET', 'POST'])
+@session_check
+def handle_burn():
+    # Just request and put into queue
+    if request.method=="GET":
+        my_account = pickle.loads(session['loginSession'])
+        try:
+            NFTImplementation.functions.requestBurning(int(request.args['tokenID'])).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            return render_template_string(
+                "<script>alert(\"아직 해당 토큰을 제거할 수 없습니다.\");location.href=\"/home\";</script>"
+            )
+    elif request.method=="POST":
+        return abort(403)
     else:
         return abort(403)
     return redirect(url_for('patentApp'))
