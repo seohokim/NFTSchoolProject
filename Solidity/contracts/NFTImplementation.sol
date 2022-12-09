@@ -114,6 +114,11 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         return true;
     }
 
+    function getUserTokenList() public view returns(DataTypes.MetaData[] memory) {
+        DataTypes.TokenMetadata storage metaData = metadata[msg.sender];
+        return metaData.stored;
+    }
+
     /*
     function burn(address user, uint256 unique_id) external returns(bool) {
         require(msg.sender == user, "You can't burn this token");

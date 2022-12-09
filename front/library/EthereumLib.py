@@ -10,6 +10,14 @@ def call_function(contract, function, parameter, values):
     result = contract.functions[function](parameter).transact(values)
     return result
 
+def call_function_noArg(contract, function, values):
+    result = contract.functions[function]().transact(values)
+    return result
+
+def call_function_view_noArg(contract, function, values):
+    result = contract.functions[function]().call(values)
+    return result
+
 def get_user_balance(web3, user_account):
     return web3.eth.get_balance(user_account)
 

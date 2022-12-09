@@ -46,15 +46,15 @@
 
   <form action="/api/mint" method="POST">
   <div id = "patentTitle">
-      <input type = "text" id="title" size ="50" placeholder=" Your patent's title">
+      <input type = "text" id="title" size ="50" name="title" placeholder=" Your patent's title">
   </div>
   <div id = "patentField">
-      <input type = "text" id="field" size ="50" placeholder=" Your patent's field">
+      <input type = "text" id="field" size ="50" name="field" placeholder=" Your patent's field">
   </div>
   <div id = "insertFile">&nbsp;  Insert pdf, docs file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;       
       <input type = "file" >
   </div>
-      <input type = "text" id="desc" size ="100" placeholder=" Descriptions..">
+      <input type = "text" id="desc" size ="100" name="desc" placeholder=" Descriptions..">
   <div class = "register">
       <input type="Submit" name="register" class="button" value="register">
   </div>
@@ -62,11 +62,14 @@
   <div class = "square"></div>
 
   <div class = "patentlist">
+    {%for i in range(0, len)%}
     <div id = "img1"></div>
     <div id = "text1">Image</div>
-    <div id = "title1">Title</div>
+    <div id = "title1">{{tokens[i][0]}}</div>
     <div id = "cancel1">
-      <a href = {{url_for ( 'cancelPopup' ) }}>cancel</a></div>
+      <a href = {{url_for ( 'cancelPopup' ) }}>cancel</a>
+    </div>
+    {%endfor%}
   </div>
 </body>
 </html>

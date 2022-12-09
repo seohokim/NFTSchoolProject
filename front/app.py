@@ -32,7 +32,7 @@ def session_check(a_function):              # Only for login session
             return redirect(url_for('login'))
     return decorated_func
 
-# Routing section
+# Routing section (Basic Login/Logout Logics)
 @app.route('/')
 @app.route('/index')                # / is /index default
 @session_check
@@ -54,13 +54,24 @@ def logout():
     session.pop('loginSession', None)
     return redirect(url_for('login'))
 
+# No need walletPopup now
 @app.route('/login/walletPopup')
 def walletPopup():
     return render_template("walletPopup.html")
 
+# Minting, Burning Routing Section
+
 @app.route('/home/patentApp')
 def patentApp():
-    return render_template("patentApp.html")
+    # Read all tokens of user
+    my_account = pickle.loads(session['loginSession'])
+    values = {
+        'from': my_account.address
+    }
+    tokens = EthereumLib.call_function_view_noArg(NFTImplementation, 'getUserTokenList', values)
+    print("Tokens : " + str(tokens))
+    # List tokens into Cancel Application tab
+    return render_template("patentApp.html", len = len(tokens), tokens=tokens)
 
 @app.route('/home/patentApp/registerPopup')
 def registerPopup():
@@ -170,7 +181,7 @@ def handle_mint():
             'value': Web3.toWei(0.001, 'ether')
         }
         parameters = {
-            'unique_id': 0x1
+            'unique_id': int(request.form.get('field'))
         }
         EthereumLib.call_function(NFTImplementation, 'mint', parameters, values)
     else:
