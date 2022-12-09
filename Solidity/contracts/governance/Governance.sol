@@ -8,6 +8,8 @@ import "../utils/OwnableCustom.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
+import "hardhat/console.sol";
+
 contract Governance is IGovernance, OwnableCustom {
     address private governanceOwner;
     address private nftCore;
@@ -36,13 +38,20 @@ contract Governance is IGovernance, OwnableCustom {
     }
 
     function _initializeOwnership(address newOwner) private {
+        console.log("ok");
         _setupRole(DEFAULT_ADMIN_ROLE, newOwner);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        console.log("ok2");
         _setupRole(DEFAULT_ADMIN_ROLE, address(this));          // Allowed from myself
+        console.log("ok3");
         _setupRole(BAN_ADMIN, newOwner);
+        console.log("ok4");
 
         // Contract allowing
         require(nftCore != address(0), "YOU HAVE TO SET CORE CONTRACT FIRST");
-        addAllowedContract(nftCore);
+        console.log("ok5");
+        console.log(address(this));
+        console.log("ok6");
     }
 
     function ban(address user, uint256 period) external onlyPolice(msg.sender) returns (bool) {

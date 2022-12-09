@@ -1,18 +1,59 @@
-import { ethers } from "hardhat";
+import { ethers, network } from "hardhat";
+import { Signer, ContractFactory, Contract } from "ethers";
+
+let UtilFactory : ContractFactory;
+let Util : Contract;
+let NFTImplementationFactory : ContractFactory;
+let NFTImplementation : Contract;
+let PendingQueueFactory : ContractFactory;
+let PendingQueueInst : Contract;
+let MarketPlaceFactory : ContractFactory;
+let MarketPlaceInst : Contract;
+let DepositPoolFactory : ContractFactory;
+let DepositPool : Contract;
+
+let PendingQueue;
+let MarketPlace;
+let Governance;
+
+let owner : Signer;
+let minter : Signer;
+let burner : Signer;
+let user1 : Signer;
+let user2 : Signer;
+let others : Signer[];
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  // First Deploying Util library
+  UtilFactory = await ethers.getContractFactory('Util');
+  Util = await UtilFactory.deploy();
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  // Deploying NFT Implementation contract
+  [owner, minter, burner, user1, user2, ...others] = await ethers.getSigners();
+  NFTImplementationFactory = await ethers.getContractFactory('NFTImplementation', {
+      libraries: {
+          'Util': Util.address,
+      }
+  });
+  NFTImplementation = await NFTImplementationFactory.connect(owner).deploy(minter.getAddress());
+  PendingQueue = await NFTImplementation.pdQueueCon();
+  MarketPlace = await NFTImplementation.marketPlace();
+  Governance = await NFTImplementation.governance();
+  // await Governance.addAllowedContract(NFTImplementation.address);
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  PendingQueueFactory = await ethers.getContractFactory('PendingQueue');
+  PendingQueueInst = await PendingQueueFactory.attach(PendingQueue);
 
-  await lock.deployed();
+  MarketPlaceFactory = await ethers.getContractFactory('MarketPlace');
+  MarketPlaceInst = await MarketPlaceFactory.attach(MarketPlace);
 
-  console.log("Lock with 1 ETH deployed to:", lock.address);
+  // Deploying DepositPool
+  DepositPoolFactory = await ethers.getContractFactory('DepositPool', {libraries: {'Util': Util.address,}});
+  DepositPool = await DepositPoolFactory.connect(owner).deploy(NFTImplementation.address);
+
+  await NFTImplementation.connect(owner).setDepositPool(DepositPool.address);
+
+  console.log(`NFTImplementation Address : ${NFTImplementation.address}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

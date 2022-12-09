@@ -4,6 +4,12 @@ real_server = 'https://eth-goerli.g.alchemy.com/v2/h2EvZz6TPtgyKXoinc4mpVQLeunHd
 debug_server = 'http://127.0.0.1:8545/'
 test_privatekey = "e46745b0ff6b51ffeec10ffa57db3c95cf606a41089e9cbddc39eb5a07853a1e"
 
+debug_privatekey = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+
+def call_function(contract, function, parameter, values):
+    result = contract.functions[function](parameter).transact(values)
+    return result
+
 def get_user_balance(web3, user_account):
     return web3.eth.get_balance(user_account)
 
@@ -14,7 +20,9 @@ def connect_to_network(debug_mode=False):
         provider = Web3.HTTPProvider(debug_server)
     return [Web3(provider), provider]
 
-def login(web3, user_privateKey):
+def login(web3, user_privateKey, debug_mode=False):
+    if debug_mode == True:
+        return web3.eth.accounts[0]
     return web3.eth.account.privateKeyToAccount(user_privateKey)
 
 if __name__ == '__main__':

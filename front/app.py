@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, json
 from flask import Flask, request, render_template, redirect, url_for, abort, session
 
 import pickle
@@ -7,12 +7,19 @@ from functools import wraps
 sys.path.insert(1, os.getcwd() + "/library/")
 import EthereumLib
 
+from web3 import Web3
+
 app =Flask(__name__)
 app.secret_key = "MY_SECRET_KEY"
 
 # Global Variable secation
 provider = None
 web3 = None
+NFTImplementationAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+NFTImplementationABI = json.loads(open("./metadata/NFTImplementation.json", 'rb').read())['abi']
+NFTImplementation = None
+
+DEBUG = True
 
 # Decorator section
 def session_check(a_function):              # Only for login session
@@ -138,8 +145,11 @@ def handle_login():
         return redirect(url_for('home'))
     if request.method == 'POST':
         # Only allowed on POST
-        print(request.form.get('private_key'))
-        my_account = EthereumLib.login(web3, request.form.get('private_key'))
+        #print(request.form.get('private_key'))
+        private_key = request.form.get('private_key')
+        if DEBUG == True:
+            private_key = EthereumLib.debug_privatekey
+        my_account = EthereumLib.login(web3, private_key)
         my_balance = EthereumLib.get_user_balance(web3, my_account.address)
         if my_balance > 0:
             session['loginSession'] = pickle.dumps(my_account)
@@ -150,13 +160,32 @@ def handle_login():
     else:
         return abort(403)
 
+@app.route('/api/mint', methods=['POST'])
+@session_check
+def handle_mint():
+    if request.method == "POST":
+        my_account = pickle.loads(session['loginSession'])
+        values = {
+            'from': my_account.address,
+            'value': Web3.toWei(0.001, 'ether')
+        }
+        parameters = {
+            'unique_id': 0x1
+        }
+        EthereumLib.call_function(NFTImplementation, 'mint', parameters, values)
+    else:
+        return abort(403)
+    return redirect(url_for('patentApp'))
 
 # Not routing section
 def initialize_by_startup():
     global web3
     global provider
+    global NFTImplementation
     try:
-        [web3, provider] = EthereumLib.connect_to_network()
+        [web3, provider] = EthereumLib.connect_to_network(debug_mode=True)
+        NFTImplementation = web3.eth.contract(address=NFTImplementationAddress, abi=NFTImplementationABI)
+        print(f"[*] NFTImplementation Contract : {NFTImplementation}")
     except Exception as e:
         return False
     return True

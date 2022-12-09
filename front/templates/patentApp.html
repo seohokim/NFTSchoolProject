@@ -44,27 +44,20 @@
   
   <div class = "menu"> Registration</div>
 
+  <form action="/api/mint" method="POST">
   <div id = "patentTitle">
-    <form>
       <input type = "text" id="title" size ="50" placeholder=" Your patent's title">
-    </form>
   </div>
   <div id = "patentField">
-    <form>
       <input type = "text" id="field" size ="50" placeholder=" Your patent's field">
-    </form>
   </div>
-  <div id = "insertFile">&nbsp;  Insert pdf, docs file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-    <form>           
+  <div id = "insertFile">&nbsp;  Insert pdf, docs file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;       
       <input type = "file" >
-    </div>
+  </div>
       <input type = "text" id="desc" size ="100" placeholder=" Descriptions..">
-    </form>
-    <div class = "register">
-    <a href = {{ url_for( 'registerPopup' )}}>
-      <input type="button" name="register" class="button" value="register">
-    </a>
-    </div>
+  <div class = "register">
+      <input type="Submit" name="register" class="button" value="register">
+  </div>
   <div id = "cancelApp"> Cancel Application</div>
   <div class = "square"></div>
 

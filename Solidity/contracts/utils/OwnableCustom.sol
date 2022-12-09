@@ -7,6 +7,7 @@ import "../interfaces/IOwnableCustom.sol";
 
 import "../utils/Util.sol";
 
+import "hardhat/console.sol";
 
 contract OwnableCustom is AccessControl, IOwnableCustom {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER");
@@ -21,6 +22,7 @@ contract OwnableCustom is AccessControl, IOwnableCustom {
 
     // Modifers area
     modifier onlyAdmin(address sender) {
+        // console.log(sender);
         require(hasRole(DEFAULT_ADMIN_ROLE, sender), "YOU ARE NOT ADMIN");
         _;
     }
