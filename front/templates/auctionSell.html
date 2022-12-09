@@ -45,16 +45,16 @@
   <div class = "menu"> View Patent</div>
   
   <div class = "title">Title = "title"</div>
-  <div class = "field">Field = "field"</div>
+  <div class = "field">Token ID = {{token[0]}}</div>
   <div class = "applicant">applicant : "name"</div>
 
   <div class = "desc">Descriptions..</div>
 
   <form>
-    <input type = "text" id="minPrice" size ="50" placeholder="Minimum price.. (Ether)">
-  </form>
-  <form>
-    <input type = "text" id="salePrice" size ="50" placeholder="sale price.. (Ether)">
+    <input type="hidden" value="1" name="marketID" />
+    <input type="hidden" value="{{token[0]}}" name="tokenID" />
+    <input type = "text" id="minPrice" size ="50" placeholder="Minimum price.. (Ether)" name="minPrice">
+    <input type = "text" id="salePrice" size ="50" placeholder="sale price.. (Ether)" name="salePrice">
   </form>
 
   

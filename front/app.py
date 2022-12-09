@@ -21,6 +21,13 @@ NFTImplementation = None
 
 DEBUG = True
 
+ERROR_TEMPLATE = """
+<script>
+alert('$MESSAGE');
+location.href='/home';
+</script>
+"""
+
 # Decorator section
 def session_check(a_function):              # Only for login session
     @wraps(a_function)
@@ -73,6 +80,7 @@ def patentApp():
     # List tokens into Cancel Application tab
     return render_template("patentApp.html", len = len(tokens), tokens=tokens)
 
+# 이건 사용할 필요 없음
 @app.route('/home/patentApp/registerPopup')
 def registerPopup():
     return render_template("registerPopup.html")
@@ -211,6 +219,169 @@ def handle_burn():
     else:
         return abort(403)
     return redirect(url_for('patentApp'))
+
+# 이거도 일시적으로 GET 허용해줌
+# 이유는 Form이 Submit 버튼이 안나옴.. CSS문제인 것 같음
+@app.route('/api/auction', methods=['GET', 'POST'])
+@session_check
+def handle_auction():
+    searched_token = None
+    my_account = pickle.loads(session['loginSession'])
+    print(request.form)
+    tokenID = int(request.args.get('field'), 10)
+    tokens = NFTImplementation.functions.getUserTokenList().call({'from': my_account.address})
+    for i in range(0, len(tokens)):
+        if tokens[i][0] == tokenID:
+            searched_token = tokens[i]
+            break
+    return render_template('auctionSell.html', token=searched_token)
+
+# 일단 전부다 GET, POST 허용해서 GET 버전으로 작성해둘테니까 POST 동작 가능하게 프론트 수정해주세요
+# 지금 프론트 기능 동작에 문제가 많네요
+@app.route('/api/startAuction', methods=['GET', 'POST'])
+@session_check
+def handle_startAuction():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+        startCost = int(request.args.get('startCost'), 10)
+
+        try:
+            NFTImplementation.functions.startAuction(marketID, tokenID, startCost).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            error_msg = "해당 토큰은 이미 경매에 부쳐졌습니다."
+            return render_template_string(ERROR_TEMPLATE.replace("$MESSAGE", error_msg))
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('auction'))
+
+@app.route('/api/endAuction', methods=['GET', 'POST'])
+@session_check
+def handle_endAuction():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+        try:
+            NFTImplementation.functions.endAuction(marketID, tokenID).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            error_msg = "해당 경매는 아직 종료할 수 없습니다."
+            return render_template_string(ERROR_TEMPLATE.replace("$MESSAGE", error_msg))
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('auction'))
+
+@app.route('/api/suggest', methods=['GET', 'POST'])
+@session_check
+def handle_auctionSuggest():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+        suggestCost = int(request.args.get('suggestCost'), 10)
+        try:
+            NFTImplementation.functions.suggestCost(marketID, tokenID, suggestCost).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            error_msg = "제시가를 제시하는데에 실패하였습니다."
+            return render_template_string(ERROR_TEMPLATE.replace("$MESSAGE", error_msg))
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('auction'))
+
+@app.route('/api/selling', methods=['GET', 'POST'])
+@session_check
+def handle_auctionSelling():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+        minPrice = int(request.args.get('minPrice'), 10)
+        salePrice = int(request.args.get('salePrice'), 10)
+
+        NFTImplementation.functions.applyItem(marketID, tokenID, minPrice).transact(
+            {'from': my_account.address}
+        )
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('home'))
+
+@app.route('/api/changeItemCost', methods=['GET', 'POST'])
+@session_check
+def handle_changeItemCost():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+        newCost = int(request.args.get('newCost'), 10)
+
+        try:
+            NFTImplementation.functions.changeItemCost(marketID, tokenID, newCost).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            error_msg = "가격을 변경하는데에 실패하였습니다."
+            return render_template_string(ERROR_TEMPLATE.replace("$MESSAGE", error_msg))
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('home'))
+
+@app.route('/api/deleteItem', methods=['GET', 'POST'])
+@session_check
+def handle_deleteItem():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+
+        try:
+            NFTImplementation.functions.deleteItem(marketID, tokenID).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            error_msg = "해당 아이템을 삭제하는데에 실패했습니다."
+            return render_template_string(ERROR_TEMPLATE.replace("$MESSAGE", error_msg))
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('home'))
+
+@app.route('/api/purchaseItem', methods=['GET', 'POST'])
+@session_check
+def handle_purchaseItem():
+    my_account = pickle.loads(session['loginSession'])
+    if request.method == "GET":
+        marketID = int(request.args.get('marketID'), 10)
+        tokenID = int(request.args.get('tokenID'), 10)
+        try:
+            NFTImplementation.functions.purchaseItem(marketID, tokenID).transact(
+                {'from': my_account.address}
+            )
+        except Exception as e:
+            error_msg = "해당 아이템을 구매하는데에 실패하였습니다."
+            return render_template_string(ERROR_TEMPLATE.replace("$MESSAGE", error_msg))
+    elif request.method == "POST":
+        return
+    else:
+        return abort(403)
+    return redirect(url_for('home'))
 
 # Not routing section
 def initialize_by_startup():

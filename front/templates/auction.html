@@ -58,12 +58,13 @@
   </aside>
   
   <div class = "menu"> Search Patents</div>
-    <form>
+    <div>
+    <form method="POST" action="/api/auction">
       <input type = "text" id="title" size ="50" placeholder="Your patent's title">
+      <input type = "text" id="field" size ="50" placeholder="Your patent's field"><br />
+      <input type = "Submit" />
     </form>
-    <form>
-      <input type = "text" id="field" size ="50" placeholder="Your patent's field">
-    </form>
+    </div>
 
   <div class = "result">Result..</div>
 
