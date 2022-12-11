@@ -28,6 +28,11 @@ contract PendingQueue {
         return false;
     }
 
+    function getPendingData(uint256 index) public returns (DataTypes.PendingMetadata memory) {
+        DataTypes.PendingMetadata memory mem = pendingQueue[index];
+        return mem;
+    }
+
     function _findPendingMetadata(uint256 tokenId) private view returns (uint256) {
         for (uint256 i = 0; i < pendingQueue.length; i++) {
             if (pendingQueue[i].id == tokenId) {
@@ -85,11 +90,11 @@ contract PendingQueue {
                 remove(0);          // 0번째 요소를 삭제함
             }
             else {
-                pending = DataTypes.PendingMetadata(0, address(0), DataTypes.MetaData(0), 0);
+                pending = DataTypes.PendingMetadata(0, address(0), DataTypes.MetaData(0, "", ""), 0);
             }
         }
         else {
-            pending = DataTypes.PendingMetadata(0, address(0), DataTypes.MetaData(0), 0);
+            pending = DataTypes.PendingMetadata(0, address(0), DataTypes.MetaData(0, "", ""), 0);
         }
         // console.log(accepted);
         return pending;

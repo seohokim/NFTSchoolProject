@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys, os, json
 from flask import Flask, request, render_template, redirect, url_for, abort, session, render_template_string
 
@@ -189,7 +190,9 @@ def handle_mint():
             'value': Web3.toWei(0.001, 'ether')
         }
         parameters = {
-            'unique_id': int(request.form.get('field'))
+            'unique_id': int(request.form.get('field')),
+            'title': request.form.get('title'),
+            'contentURI': request.form.get('contentURI')
         }
         EthereumLib.call_function(NFTImplementation, 'mint', parameters, values)
     else:

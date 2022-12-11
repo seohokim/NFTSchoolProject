@@ -190,8 +190,10 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         require(tokenIndex != uint256(MAXIMUM_TOKEN_ID), "Token ID does ont exists");
         require(ownerOf(token_id) == address(msg.sender), "OWNERSHIP ISSUE");
 
+        _addToMetadata(
+            user, token_id, metaData.stored[tokenIndex].title, metaData.stored[tokenIndex].contentURI
+        );
         _removeFromMetadata(msg.sender, token_id);
-        _addToMetadata(user, token_id);
 
         if (_isApprovedOrOwner(user, token_id) == false) {
             approve(user, token_id);
@@ -210,7 +212,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         return uint256(MAXIMUM_TOKEN_ID);
     }
 
-    function _addToMetadata(address user, uint256 tokenID) private {
+    function _addToMetadata(address user, uint256 tokenID, string memory title, string memory contentURI) private {
         DataTypes.TokenMetadata storage metaData = metadata[user];
 
         if (metaData.owner == address(0)) {
@@ -218,7 +220,9 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         }
         metaData.ids[tokenID] = true;
         metaData.stored.push(DataTypes.MetaData(
-            tokenID
+            tokenID,
+            title,
+            contentURI
         ));
     }
 
@@ -263,6 +267,7 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
     // Restore pending element
     function restoreMetadata(address user, uint256 tokenId) external onlyAdmin(msg.sender) returns (bool) {
         uint256 index = pdQueueCon.findPendingMetadata(tokenId);
+        DataTypes.PendingMetadata memory data = pdQueueCon.getPendingData(index);
         
         if (index == type(uint256).max) {
             return false;
@@ -272,7 +277,9 @@ contract NFTImplementation is INFTImplementation, OwnableCustom, ERC721("OurNFT"
         DataTypes.TokenMetadata storage metaData = metadata[user];
         metaData.ids[tokenId] = true;
         metaData.stored.push(DataTypes.MetaData(
-            tokenId
+            tokenId,
+            data.info.title,
+            data.info.contentURI
         ));
 
         // Remove from pending queue

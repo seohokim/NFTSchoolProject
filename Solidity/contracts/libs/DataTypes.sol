@@ -4,6 +4,8 @@ pragma solidity ^0.8.9;
 library DataTypes {
     struct MetaData {
         uint256 unique_id;
+        string title;
+        string contentURI;
     }
 
     struct TokenMetadata {

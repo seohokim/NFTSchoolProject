@@ -51,8 +51,8 @@
   <div id = "patentField">
       <input type = "text" id="field" size ="50" name="field" placeholder=" Your patent's field">
   </div>
-  <div id = "insertFile">&nbsp;  Insert pdf, docs file&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;       
-      <input type = "file" >
+  <div id = "insertFile">     
+      <input type = "text" id="contentURI" size="50" name="contentURI" placeholder=" Your patent's resource URI">
   </div>
       <input type = "text" id="desc" size ="100" name="desc" placeholder=" Descriptions..">
   <div class = "register">
@@ -63,9 +63,9 @@
 
   <div class = "patentlist">
     {%for i in range(0, len)%}
-    <div id = "img1"></div>
-    <div id = "text1">Image</div>
-    <div id = "title1">{{tokens[i][0]}}</div>
+    <div id = "img1"><img src="{{tokens[i][2]}}" width=120 height=90 /></div>
+    <div id = "text1">{{tokens[i][0]}}</div>
+    <div id = "title1">{{tokens[i][1]}}</div>
     <div id = "cancel1">
       <a href = {{url_for ( 'cancelPopup' ) }}>cancel</a>
     </div>
