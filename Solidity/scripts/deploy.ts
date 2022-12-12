@@ -54,11 +54,15 @@ async function main() {
   await NFTImplementation.connect(owner).setDepositPool(DepositPool.address);
 
   console.log(`NFTImplementation Address : ${NFTImplementation.address}`);
+  console.log(`MarketPlace Address : ${MarketPlaceInst.address}`);
 
   // Make market marketID=1
   // Open market marketID=1
   await MarketPlaceInst.makeMarket(0x1);
   await MarketPlaceInst.openMarket(0x1);
+
+  await MarketPlaceInst.makeMarket(0x2);
+  await MarketPlaceInst.openMarket(0x2);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

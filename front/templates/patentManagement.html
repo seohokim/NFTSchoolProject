@@ -45,15 +45,17 @@
   
   <div class = "menu"> DashBoard</div>
   <div class = "myPatent1">
-    <div id = "myImg1"></div>
-    <div id = "text1">Image</div>
-    <div id = "myTitle1">Title</div>
+    {%if tokens != None%}
+    <div id = "myImg1"><img src="{{tokens[0][2]}}" width=120 height=90 /></div>
+    <div id = "text1">{{tokens[0][0]}}</div>
+    <div id = "myTitle1">{{tokens[0][1]}}</div>
     <div id = "sell1">
       <a href = {{ url_for ( 'auctionSell' )}}>sell</a>
     </div>
     <div id = "view1">
       <a href = {{ url_for ( 'patentManView' )}}>view</a>
     </div>
+    {%endif%}
   </div>
 
   <div class = "myPatent2">

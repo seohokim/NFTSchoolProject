@@ -66,25 +66,26 @@
     </form>
     </div>
 
-  <div class = "result">Result..</div>
+  <br />
+  <div class = "result">Markets</div>
 
   <table class = "resultTable">
     <tr class = "imageLine1">
-        <th><a href = {{url_for('auctionView')}}>Image</a></th>
-        <th><a href = {{url_for('auctionView')}}>Image</a></th>
-        <th><a href = {{url_for('auctionView')}}>Image</a></th>
-        <th><a href = {{url_for('auctionView')}}>Image</a></th>
-        <th><a href = {{url_for('auctionView')}}>Image</a></th>
-        <th><a href = {{url_for('auctionView')}}>Image</a></th>
+        <th><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC18gjG677oq3asB_nQXToJNkN5ltnfwWr3A&usqp=CAU" width=50 height=50 /></th>
+        <th><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC18gjG677oq3asB_nQXToJNkN5ltnfwWr3A&usqp=CAU" width=50 height=50 /></th>
+        <th><a href = {{url_for('auctionView')}}>Not Opened Yet</a></th>
+        <th><a href = {{url_for('auctionView')}}>Not Opened Yet</a></th>
+        <th><a href = {{url_for('auctionView')}}>Not Opened Yet</a></th>
+        <th><a href = {{url_for('auctionView')}}>Not Opened Yet</a></th>
     </tr>
 
     <tr>
-      <td>Title</td>
-      <td>Title</td>
-      <td>Title</td>
-      <td>Title</td>
-      <td>Title</td>
-      <td>Title</td>
+      <td>{{marketInfo[0][1]}}</td>
+      <td>{{marketInfo[1][1]}}</td>
+      <td>Not Opened Yet</td>
+      <td>Not Opened Yet</td>
+      <td>Not Opened Yet</td>
+      <td>Not Opened Yet</td>
     </tr>
   </table>
 </body>

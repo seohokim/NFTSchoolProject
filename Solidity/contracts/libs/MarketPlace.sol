@@ -108,6 +108,10 @@ contract MarketPlace {
         emit MarketRemoved(marketID);
         return true;
     }
+    
+    function checkMarketisOpen(uint256 marketID) public view returns (bool) {
+        return marketExists[marketID];
+    }
 
     // * Auction - Detail
     // 1. Auction needs marketplaces for each kind

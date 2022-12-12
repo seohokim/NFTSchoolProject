@@ -16,9 +16,15 @@ app.secret_key = "MY_SECRET_KEY"
 # Global Variable secation
 provider = None
 web3 = None
+
 NFTImplementationAddress = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+MarketPlaceAddress = '0x9f1ac54BEF0DD2f6f3462EA0fa94fC62300d3a8e'
+
 NFTImplementationABI = json.loads(open("./metadata/NFTImplementation.json", 'rb').read())['abi']
+MarketPlaceABI = json.loads(open("./metadata/MarketPlace.json", 'rb').read())['abi']
+
 NFTImplementation = None
+MarketPlace = None
 
 DEBUG = True
 
@@ -28,6 +34,14 @@ alert('$MESSAGE');
 location.href='/home';
 </script>
 """
+
+def getUserTokens():
+    my_account = pickle.loads(session['loginSession'])
+    values = {
+        'from': my_account.address
+    }
+    tokens = EthereumLib.call_function_view_noArg(NFTImplementation, 'getUserTokenList', values)
+    return tokens
 
 # Decorator section
 def session_check(a_function):              # Only for login session
@@ -68,7 +82,6 @@ def walletPopup():
     return render_template("walletPopup.html")
 
 # Minting, Burning Routing Section
-
 @app.route('/home/patentApp')
 def patentApp():
     # Read all tokens of user
@@ -91,18 +104,25 @@ def cancelPopup():
     return render_template("cancelPopup.html")
 
 @app.route('/home/patentManagement')
-def patentManagement():
-    return render_template("patentManagement.html")
+def patentManagement(tokens=None):
+    return render_template("patentManagement.html", tokens=tokens)
     
 @app.route('/home/patentManagement/PatentManView')
 def patentManView():
     return render_template("patentManView.html")
 
-    
-
 @app.route('/home/auction')
 def auction():
-    return render_template("auction.html")
+    # Get opened auction list
+    opened_markets = []
+    my_account = pickle.loads(session['loginSession'])
+    for i in range(0, 5):
+        result = MarketPlace.functions.checkMarketisOpen(i).call(
+            {'from': my_account.address}
+        )
+        if result == True:
+            opened_markets.append([i, f"MarketID {i}"])
+    return render_template("auction.html", len=len(opened_markets), marketInfo=opened_markets)
 
 @app.route('/home/auction/auctionSell')
 def auctionSell():
@@ -197,7 +217,7 @@ def handle_mint():
         EthereumLib.call_function(NFTImplementation, 'mint', parameters, values)
     else:
         return abort(403)
-    return redirect(url_for('patentApp'))
+    return render_template('patentManagement.html', tokens=getUserTokens())
 
 # 지금은 GET을 허용함, 디버깅 용도로 사용할 예정이라서
 # 이후에 Cancel 페이지가 수정되고 나면 업데이트 예정
@@ -228,15 +248,7 @@ def handle_burn():
 @app.route('/api/auction', methods=['GET', 'POST'])
 @session_check
 def handle_auction():
-    searched_token = None
-    my_account = pickle.loads(session['loginSession'])
-    print(request.form)
-    tokenID = int(request.args.get('field'), 10)
-    tokens = NFTImplementation.functions.getUserTokenList().call({'from': my_account.address})
-    for i in range(0, len(tokens)):
-        if tokens[i][0] == tokenID:
-            searched_token = tokens[i]
-            break
+    
     return render_template('auctionSell.html', token=searched_token)
 
 # 일단 전부다 GET, POST 허용해서 GET 버전으로 작성해둘테니까 POST 동작 가능하게 프론트 수정해주세요
@@ -391,10 +403,13 @@ def initialize_by_startup():
     global web3
     global provider
     global NFTImplementation
+    global MarketPlace
     try:
         [web3, provider] = EthereumLib.connect_to_network(debug_mode=True)
         NFTImplementation = web3.eth.contract(address=NFTImplementationAddress, abi=NFTImplementationABI)
+        MarketPlace = web3.eth.contract(address=MarketPlaceAddress, abi=MarketPlaceABI)
         print(f"[*] NFTImplementation Contract : {NFTImplementation}")
+        print(f"[*] MarketPlace Contract : {MarketPlace}")
     except Exception as e:
         return False
     return True
